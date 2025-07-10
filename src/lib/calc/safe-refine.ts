@@ -23,18 +23,21 @@ export const costs = {
 	12: { zeny: 9_000_000, copy: 30, material: 45 * 5 },
 	13: { zeny: 14_500_000, copy: 45, material: 75 * 5 },
 	14: { zeny: 24_500_000, copy: 69, material: 120 * 5 },
-	15: { zeny: 42_000_000, copy: 98, material: 180 * 5 }
+	15: { zeny: 42_000_000, copy: 98, material: 180 * 5 },
 } satisfies Record<number, SafeRefineCost>;
 
 export type RefineRange = 0 | keyof typeof costs;
 export const costs_array = Array.from<SafeRefineCost>({
 	...costs,
-	length: Object.keys(costs).length + 1 // +1 since costs array object start at index 1
+	length: Object.keys(costs).length + 1, // +1 since costs array object start at index 1
 } as const).slice(1); // skip the first (refine +0) element since its empty
 
 export const calculate = (from: RefineRange, to: RefineRange) =>
-	costs_array.slice(from, to).reduce((acc, value) => ({
-		zeny: acc.zeny + value.zeny,
-		copy: acc.copy + value.copy,
-		material: acc.material + value.material
-	}));
+	costs_array.slice(from, to).reduce(
+		(acc, value) => ({
+			zeny: acc.zeny + value.zeny,
+			copy: acc.copy + value.copy,
+			material: acc.material + value.material,
+		}),
+		{ zeny: 0, copy: 0, material: 0 }
+	);

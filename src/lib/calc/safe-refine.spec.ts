@@ -36,4 +36,16 @@ describe('safe refine calculations', () => {
 
 		expect(calculate(4, 8)).toEqual(refine_4_to_8);
 	});
+
+	it('should properly handle noop (same refine_from and refine_to)', () => {
+		const result_0 = calculate(0, 0);
+		expect(result_0.zeny).toBe(0);
+		expect(result_0.copy).toBe(0);
+		expect(result_0.material).toBe(0);
+
+		const result_12 = calculate(12, 12);
+		expect(result_12.zeny).toBe(0);
+		expect(result_12.copy).toBe(0);
+		expect(result_12.material).toBe(0);
+	});
 });
