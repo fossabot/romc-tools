@@ -23,7 +23,7 @@
 
 <Separator class="my-2" />
 
-<div class="mt-6 mb-8 grid grid-cols-2 gap-4">
+<div class="mt-6 mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
 	<div class="flex flex-col space-y-2">
 		<Label for="refine_from">Refine from</Label>
 		<Input bind:value={refine_from} id="refine_from" type="number" min="0" max={refine_to - 1} />
