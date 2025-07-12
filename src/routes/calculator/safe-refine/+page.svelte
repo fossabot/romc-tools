@@ -1,9 +1,5 @@
 <script lang="ts">
-	import {
-		calculate_equipment_price,
-		EquipmentState,
-		type RefineRange,
-	} from '$lib/calc/safe-refine';
+	import { calculate_equipment_price, EquipmentState } from '$lib/calc/safe-refine';
 	import { calculate_safe_refine } from '$lib/calc/safe-refine';
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
@@ -11,14 +7,13 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Slider } from '$lib/components/ui/slider';
+	import { parameters } from './parameters.svelte';
 
-	let base_equipment_price = $state(0);
-	let equipment_state: EquipmentState = $state(EquipmentState.Clean);
+	const { equipment, refine_range } = $derived(parameters.current);
+
 	const actual_equipment_price = $derived(
-		calculate_equipment_price(base_equipment_price, equipment_state)
+		calculate_equipment_price(equipment.base_price, equipment.state)
 	);
-
-	let refine_range: [RefineRange, RefineRange] = $state([0, 1]);
 	const [refine_from, refine_to] = $derived(refine_range);
 
 	const output = $derived.by((): [string, string][] => {
@@ -47,7 +42,7 @@
 		<div class="flex items-center space-x-2">
 			<Input
 				type="number"
-				bind:value={base_equipment_price}
+				bind:value={parameters.current.equipment.base_price}
 				id="base_equipment_price"
 				min="0"
 				step="10000"
@@ -58,8 +53,8 @@
 					{#snippet child({ props })}
 						<Button
 							{...props}
-							variant={equipment_state === EquipmentState.Clean ? 'secondary' : 'destructive'}
-							class="h-full w-12 text-sm font-medium">{equipment_state}</Button
+							variant={equipment.state === EquipmentState.Clean ? 'secondary' : 'destructive'}
+							class="h-full w-12 text-sm font-medium">{equipment.state}</Button
 						>
 					{/snippet}
 				</DropdownMenu.Trigger>
@@ -67,7 +62,7 @@
 					<DropdownMenu.Group>
 						<DropdownMenu.Label>Equipment state</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<DropdownMenu.RadioGroup bind:value={equipment_state}>
+						<DropdownMenu.RadioGroup bind:value={parameters.current.equipment.state}>
 							{#each Object.entries(EquipmentState) as [key, value]}
 								<DropdownMenu.RadioItem {value}>{key}</DropdownMenu.RadioItem>
 							{/each}
@@ -86,7 +81,12 @@
 		<Label for="refine_range">Refine range</Label>
 
 		<input type="hidden" id="refine_range" value="{refine_from}-{refine_to}" />
-		<Slider type="multiple" bind:value={refine_range} max={15} thumbPositioning="contain" />
+		<Slider
+			type="multiple"
+			bind:value={parameters.current.refine_range}
+			max={15}
+			thumbPositioning="contain"
+		/>
 	</div>
 </div>
 
