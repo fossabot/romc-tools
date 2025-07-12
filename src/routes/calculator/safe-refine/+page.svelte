@@ -12,14 +12,18 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Slider } from '$lib/components/ui/slider';
 
-	let equipment_price = $state(0);
+	let base_equipment_price = $state(0);
 	let equipment_state: EquipmentState = $state(EquipmentState.Clean);
+	const actual_equipment_price = $derived(
+		calculate_equipment_price(base_equipment_price, equipment_state)
+	);
+
 	let refine_range: [RefineRange, RefineRange] = $state([0, 1]);
 	const [refine_from, refine_to] = $derived(refine_range);
 
 	const output = $derived.by((): [string, string][] => {
 		const { zeny, copy, material } = calculate_safe_refine(refine_from, refine_to);
-		const copy_in_zeny = copy * calculate_equipment_price(equipment_price, equipment_state);
+		const copy_in_zeny = copy * actual_equipment_price;
 		const material_in_zeny = material * 25_000;
 		const total = zeny + copy_in_zeny + material_in_zeny;
 
@@ -38,10 +42,16 @@
 
 <div class="mt-6 mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
 	<div class="flex flex-col space-y-2">
-		<Label for="equipment_price">Equipment price</Label>
+		<Label for="base_equipment_price">Base equipment price</Label>
 
 		<div class="flex items-center space-x-2">
-			<Input type="number" bind:value={equipment_price} id="equipment_price" min="0" step="1000" />
+			<Input
+				type="number"
+				bind:value={base_equipment_price}
+				id="base_equipment_price"
+				min="0"
+				step="10000"
+			/>
 
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>
@@ -66,6 +76,10 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</div>
+
+		<p class="text-xs font-medium">
+			Actual price: <span class="underline">{actual_equipment_price.toLocaleString()}z</span>
+		</p>
 	</div>
 
 	<div class="flex flex-col space-y-2 sm:col-span-2">
