@@ -7,6 +7,14 @@ export interface SafeRefineCost {
 	material: number;
 }
 
+export enum EquipmentState {
+	Clean = '+0',
+	'Broken +1' = '+1',
+	'Broken +2' = '+2',
+	'Broken +3' = '+3',
+	'Broken +4' = '+4',
+}
+
 export const costs = {
 	1: { zeny: 10_000, copy: 0, material: 1 },
 	2: { zeny: 20_000, copy: 0, material: 1 },
@@ -32,7 +40,7 @@ export const costs_array = Array.from<SafeRefineCost>({
 	length: Object.keys(costs).length + 1, // +1 since costs array object start at index 1
 } as const).slice(1); // skip the first (refine +0) element since its empty
 
-export const calculate = (from: RefineRange, to: RefineRange) =>
+export const calculate_safe_refine = (from: RefineRange, to: RefineRange) =>
 	costs_array.slice(from, to).reduce(
 		(acc, value) => ({
 			zeny: acc.zeny + value.zeny,
@@ -41,3 +49,15 @@ export const calculate = (from: RefineRange, to: RefineRange) =>
 		}),
 		{ zeny: 0, copy: 0, material: 0 }
 	);
+
+export const calculate_equipment_price = (base_price: number, state: EquipmentState) => {
+	if (base_price === 0) return 0;
+	else if (state === EquipmentState.Clean) return base_price;
+
+	const refine_values = [35_000, 45_000, 55_000, 65_000];
+	const total_refine_value = refine_values
+		.slice(0, Object.values(EquipmentState).indexOf(state))
+		.reduce((a, b) => a + b);
+
+	return Math.ceil(base_price / 2) + total_refine_value;
+};
