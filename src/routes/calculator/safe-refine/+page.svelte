@@ -31,10 +31,6 @@
 	});
 </script>
 
-<h1>Safe refine Calculator</h1>
-
-<Separator class="my-2" />
-
 <div class="mt-6 mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
 	<div class="flex flex-col space-y-2">
 		<Label for="base_equipment_price">Base equipment price</Label>

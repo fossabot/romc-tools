@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
+	import { Separator } from '$lib/components/ui/separator';
 	import '../app.css';
 
 	let { children } = $props();
+
+	const { title = 'Error' } = $derived(page.data);
 </script>
+
+<svelte:head>
+	<title>{title}</title>
+</svelte:head>
 
 <div class="min-h-[100vh]">
 	<nav
@@ -15,6 +23,10 @@
 	</nav>
 
 	<main class="mx-6 my-4 flex flex-col sm:mx-auto sm:w-[60ch]">
+		<h1>{title}</h1>
+
+		<Separator class="my-2" />
+
 		{@render children()}
 	</main>
 </div>
