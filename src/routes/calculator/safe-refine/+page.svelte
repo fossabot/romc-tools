@@ -70,7 +70,7 @@
 						<Button
 							{...props}
 							variant={equipment.state === EquipmentState.Clean ? 'secondary' : 'destructive'}
-							class="h-full w-12 text-sm font-medium">{equipment.state}</Button
+							class="h-full w-12 text-sm font-medium select-none">{equipment.state}</Button
 						>
 					{/snippet}
 				</DropdownMenu.Trigger>
