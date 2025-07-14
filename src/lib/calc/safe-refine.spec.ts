@@ -6,6 +6,8 @@ import {
 	costs_array,
 	EquipmentState,
 	type SafeRefineCost,
+	calculate_safe_refine_cost,
+	type SafeRefineOptions,
 } from './safe-refine';
 
 describe('safe refine costs data', () => {
@@ -54,6 +56,39 @@ describe('safe refine calculations', () => {
 		expect(result_12.zeny).toBe(0);
 		expect(result_12.copy).toBe(0);
 		expect(result_12.material).toBe(0);
+	});
+});
+
+describe('safe refine cost calculations', () => {
+	it('should calculate correctly', () => {
+		const result_8_12 = calculate_safe_refine(8, 12);
+
+		const base_options = {
+			apply_home_rating_discount: true,
+			equipment: { base_price: 300_000, state: EquipmentState.Clean },
+			material_price: 25_000,
+		} satisfies SafeRefineOptions;
+
+		const result = calculate_safe_refine_cost(result_8_12, base_options);
+		expect(result.zeny).toBe(result_8_12.zeny * 0.95);
+		expect(result.material_zeny).toBe(result_8_12.material * base_options.material_price);
+		expect(result.copy_zeny).toBe(
+			result_8_12.copy *
+				calculate_equipment_price(base_options.equipment.base_price, base_options.equipment.state)
+		);
+
+		const result_no_discount = calculate_safe_refine_cost(result_8_12, {
+			...base_options,
+			apply_home_rating_discount: false,
+		});
+		expect(result_no_discount.zeny).toBe(result_8_12.zeny);
+		expect(result_no_discount.material_zeny).toBe(
+			result_8_12.material * base_options.material_price
+		);
+		expect(result_no_discount.copy_zeny).toBe(
+			result_8_12.copy *
+				calculate_equipment_price(base_options.equipment.base_price, base_options.equipment.state)
+		);
 	});
 });
 

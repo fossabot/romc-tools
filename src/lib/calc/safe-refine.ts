@@ -7,6 +7,18 @@ export interface SafeRefineCost {
 	material: number;
 }
 
+export interface SafeRefineOptions {
+	/** Whether to apply home rating discount (5% zeny) */
+	apply_home_rating_discount: boolean;
+	/** The oridecon/elunium/mithril price */
+	material_price: number;
+
+	equipment: {
+		base_price: number;
+		state: EquipmentState;
+	};
+}
+
 export enum EquipmentState {
 	Clean = '+0',
 	'Broken +1' = '+1',
@@ -49,6 +61,15 @@ export const calculate_safe_refine = (from: RefineRange, to: RefineRange) =>
 		}),
 		{ zeny: 0, copy: 0, material: 0 }
 	);
+
+export const calculate_safe_refine_cost = (
+	{ zeny, copy, material }: SafeRefineCost,
+	{ apply_home_rating_discount, equipment, material_price }: SafeRefineOptions
+) => ({
+	zeny: apply_home_rating_discount ? zeny * 0.95 : zeny,
+	copy_zeny: copy * calculate_equipment_price(equipment.base_price, equipment.state),
+	material_zeny: material * material_price,
+});
 
 export const calculate_equipment_price = (base_price: number, state: EquipmentState) => {
 	if (base_price === 0) return 0;

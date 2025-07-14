@@ -7,10 +7,20 @@ export interface Parameters {
 		state: EquipmentState;
 	};
 
+	options: {
+		apply_home_rating_discount: boolean;
+		exclude_material_cost: boolean;
+	};
+
 	refine_range: [RefineRange, RefineRange];
 }
 
-export const parameters = persistedState<Parameters>('safe-refine-parameters', {
+const default_parameters: Parameters = {
 	equipment: { base_price: 300_000, state: EquipmentState.Clean },
+	options: { apply_home_rating_discount: false, exclude_material_cost: false },
 	refine_range: [8, 12],
+};
+
+export const parameters = persistedState('safe-refine-parameters', default_parameters, {
+	beforeRead: (existing) => ({ ...default_parameters, ...existing }), // ensure all parameters exists
 });
