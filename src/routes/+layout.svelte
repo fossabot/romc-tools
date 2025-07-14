@@ -22,6 +22,7 @@
 		class="flex w-full items-center border-b px-8 py-4 max-sm:flex-col max-sm:space-y-1 sm:space-x-2"
 	>
 		<Button variant="ghost" href="{base}/">Home</Button>
+		<Button variant="ghost" href="{base}/calculator/master-skill/">Master skill</Button>
 		<Button variant="ghost" href="{base}/calculator/safe-refine/">Safe refine</Button>
 	</nav>
 
