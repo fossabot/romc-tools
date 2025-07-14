@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
+	import { ModeWatcher } from 'mode-watcher';
 	import '../app.css';
 
 	let { children } = $props();
@@ -13,6 +14,8 @@
 <svelte:head>
 	<title>{title}</title>
 </svelte:head>
+
+<ModeWatcher />
 
 <div class="min-h-[100vh]">
 	<nav
