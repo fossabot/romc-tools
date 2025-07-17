@@ -17,7 +17,7 @@
 				{@const href = `${base}${id}`}
 				{@const active = page.url.pathname === href}
 				<li aria-current={active ? 'page' : 'false'} class="relative h-full">
-					<Button {href} variant="ghost">{title}</Button>
+					<Button {href} variant="ghost" class="max-sm:w-32">{title}</Button>
 				</li>
 			{/each}
 		</ul>
