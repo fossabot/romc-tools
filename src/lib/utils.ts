@@ -5,6 +5,8 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+const numberFormat = Intl.NumberFormat('en-US');
+export const formatZeny = (zeny: number) => `${numberFormat.format(zeny)}z`;
 export const sum = (array: number[]) => array.reduce((a, b) => a + b, 0);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

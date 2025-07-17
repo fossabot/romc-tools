@@ -1,28 +1,21 @@
 import { describe, it, expect } from 'vitest';
 import {
-	calculate_safe_refine,
+	calculate_safe_refine_range,
 	calculate_equipment_price,
 	costs,
-	costs_array,
 	EquipmentState,
 	type SafeRefineCost,
 	calculate_safe_refine_cost,
 	type SafeRefineOptions,
+	type RefineRange,
 } from './safe-refine';
 
 describe('safe refine costs data', () => {
 	it('+1 to +15 data should be defined', () => {
-		for (let idx = 1; idx <= 15; idx += 1) {
-			// @ts-expect-error number from for loop ain't typed
-			const cost = costs[idx] as SafeRefineCost;
-			expect(cost.zeny).toBeTypeOf('number');
-			expect(cost.copy).toBeTypeOf('number');
-			expect(cost.material).toBeTypeOf('number');
-		}
-	});
+		expect(costs).toHaveLength(15);
 
-	it('costs array elements should all be defined', () => {
-		for (const cost of costs_array) {
+		for (let idx = 1; idx <= 15; idx += 1) {
+			const cost = costs[idx - 1];
 			expect(cost.zeny).toBeTypeOf('number');
 			expect(cost.copy).toBeTypeOf('number');
 			expect(cost.material).toBeTypeOf('number');
@@ -32,10 +25,10 @@ describe('safe refine costs data', () => {
 
 describe('safe refine calculations', () => {
 	it('should calculate +4 to +8 correctly', () => {
-		const refine_5 = costs[5];
-		const refine_6 = costs[6];
-		const refine_7 = costs[7];
-		const refine_8 = costs[8];
+		const refine_5 = costs[4];
+		const refine_6 = costs[5];
+		const refine_7 = costs[6];
+		const refine_8 = costs[7];
 
 		const refine_4_to_8: SafeRefineCost = { zeny: 0, copy: 0, material: 0 };
 		refine_4_to_8.zeny += refine_5.zeny + refine_6.zeny + refine_7.zeny + refine_8.zeny;
@@ -43,16 +36,16 @@ describe('safe refine calculations', () => {
 		refine_4_to_8.material +=
 			refine_5.material + refine_6.material + refine_7.material + refine_8.material;
 
-		expect(calculate_safe_refine(4, 8)).toEqual(refine_4_to_8);
+		expect(calculate_safe_refine_range([4, 8])).toEqual(refine_4_to_8);
 	});
 
 	it('should properly handle noop (same refine_from and refine_to)', () => {
-		const result_0 = calculate_safe_refine(0, 0);
+		const result_0 = calculate_safe_refine_range([0, 0]);
 		expect(result_0.zeny).toBe(0);
 		expect(result_0.copy).toBe(0);
 		expect(result_0.material).toBe(0);
 
-		const result_12 = calculate_safe_refine(12, 12);
+		const result_12 = calculate_safe_refine_range([12, 12]);
 		expect(result_12.zeny).toBe(0);
 		expect(result_12.copy).toBe(0);
 		expect(result_12.material).toBe(0);
@@ -61,7 +54,8 @@ describe('safe refine calculations', () => {
 
 describe('safe refine cost calculations', () => {
 	it('should calculate correctly', () => {
-		const result_8_12 = calculate_safe_refine(8, 12);
+		const refine_range: RefineRange = [8, 12];
+		const result_8_12 = calculate_safe_refine_range(refine_range);
 
 		const base_options = {
 			apply_home_rating_discount: true,
@@ -69,15 +63,14 @@ describe('safe refine cost calculations', () => {
 			material_price: 25_000,
 		} satisfies SafeRefineOptions;
 
-		const result = calculate_safe_refine_cost(result_8_12, base_options);
+		const result = calculate_safe_refine_cost(refine_range, base_options);
 		expect(result.zeny).toBe(result_8_12.zeny * 0.95);
 		expect(result.material_zeny).toBe(result_8_12.material * base_options.material_price);
 		expect(result.copy_zeny).toBe(
-			result_8_12.copy *
-				calculate_equipment_price(base_options.equipment.base_price, base_options.equipment.state)
+			result_8_12.copy * calculate_equipment_price(base_options.equipment)
 		);
 
-		const result_no_discount = calculate_safe_refine_cost(result_8_12, {
+		const result_no_discount = calculate_safe_refine_cost(refine_range, {
 			...base_options,
 			apply_home_rating_discount: false,
 		});
@@ -86,8 +79,7 @@ describe('safe refine cost calculations', () => {
 			result_8_12.material * base_options.material_price
 		);
 		expect(result_no_discount.copy_zeny).toBe(
-			result_8_12.copy *
-				calculate_equipment_price(base_options.equipment.base_price, base_options.equipment.state)
+			result_8_12.copy * calculate_equipment_price(base_options.equipment)
 		);
 	});
 });
@@ -107,24 +99,32 @@ describe('equipment price calculations', () => {
 			const broken_3 = broken_3s[idx];
 			const broken_4 = broken_4s[idx];
 
-			expect(calculate_equipment_price(base_price, EquipmentState['Broken +1'])).toBe(broken_1);
-			expect(calculate_equipment_price(base_price, EquipmentState['Broken +2'])).toBe(broken_2);
-			expect(calculate_equipment_price(base_price, EquipmentState['Broken +3'])).toBe(broken_3);
-			expect(calculate_equipment_price(base_price, EquipmentState['Broken +4'])).toBe(broken_4);
+			expect(calculate_equipment_price({ base_price, state: EquipmentState.Broken1 })).toBe(
+				broken_1
+			);
+			expect(calculate_equipment_price({ base_price, state: EquipmentState.Broken2 })).toBe(
+				broken_2
+			);
+			expect(calculate_equipment_price({ base_price, state: EquipmentState.Broken3 })).toBe(
+				broken_3
+			);
+			expect(calculate_equipment_price({ base_price, state: EquipmentState.Broken4 })).toBe(
+				broken_4
+			);
 		}
 	});
 
 	it('should handle clean state', () => {
 		const base_price = 500_000;
-		const clean = calculate_equipment_price(base_price, EquipmentState.Clean);
+		const clean = calculate_equipment_price({ base_price, state: EquipmentState.Clean });
 		expect(clean).toBe(base_price);
 	});
 
 	it('should properly handle noop (0 equipment price)', () => {
-		const clean = calculate_equipment_price(0, EquipmentState.Clean);
+		const clean = calculate_equipment_price({ base_price: 0, state: EquipmentState.Clean });
 		expect(clean).toBe(0);
 
-		const broken = calculate_equipment_price(0, EquipmentState['Broken +3']);
+		const broken = calculate_equipment_price({ base_price: 0, state: EquipmentState.Broken3 });
 		expect(broken).toBe(0);
 	});
 });

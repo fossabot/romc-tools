@@ -1,18 +1,15 @@
-import { EquipmentState, type RefineRange } from '$lib/calc/safe-refine';
+import { EquipmentState, type RefineRange, type SafeRefineOptions } from '$lib/calc/safe-refine';
 import { persistedState } from 'svelte-persisted-state';
 
 export interface Parameters {
-	equipment: {
-		base_price: number;
-		state: EquipmentState;
-	};
+	equipment: SafeRefineOptions['equipment'];
 
 	options: {
 		apply_home_rating_discount: boolean;
 		exclude_material_cost: boolean;
 	};
 
-	refine_range: [RefineRange, RefineRange];
+	refine_range: RefineRange;
 }
 
 const default_parameters: Parameters = {

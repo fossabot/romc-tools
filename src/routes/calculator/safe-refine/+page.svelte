@@ -4,7 +4,6 @@
 		calculate_safe_refine_cost,
 		EquipmentState,
 	} from '$lib/calc/safe-refine';
-	import { calculate_safe_refine } from '$lib/calc/safe-refine';
 	import { Button } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Input } from '$lib/components/ui/input';
@@ -12,18 +11,15 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Slider } from '$lib/components/ui/slider';
 	import { Switch } from '$lib/components/ui/switch';
+	import { formatZeny } from '$lib/utils';
 	import { parameters } from './parameters.svelte';
 
 	const { equipment, options, refine_range } = $derived(parameters.current);
 
-	const equipment_price = $derived(
-		calculate_equipment_price(equipment.base_price, equipment.state)
-	);
+	const equipment_price = $derived(calculate_equipment_price(equipment));
 
-	const [refine_from, refine_to] = $derived(refine_range);
-	const refine_cost = $derived(calculate_safe_refine(refine_from, refine_to));
-	const { zeny, copy_zeny, material_zeny } = $derived(
-		calculate_safe_refine_cost(refine_cost, {
+	const refine_cost = $derived(
+		calculate_safe_refine_cost(refine_range, {
 			equipment,
 			apply_home_rating_discount: options.apply_home_rating_discount,
 			material_price: options.exclude_material_cost ? 0 : 25_000,
@@ -31,22 +27,22 @@
 	);
 
 	const output = $derived.by(() => {
-		const { copy, material } = refine_cost;
+		const { zeny, copy, copy_zeny, material, material_zeny } = refine_cost;
 		const total = zeny + material_zeny + copy_zeny;
 
 		return [
-			{ key: 'Zeny', zeny_value: `${zeny.toLocaleString()}z` },
+			{ key: 'Zeny', zeny_value: zeny },
 			{
 				key: 'Equipment',
 				value: `${copy} copies`,
-				zeny_value: `${copy_zeny.toLocaleString()}z`,
+				zeny_value: copy_zeny,
 			},
 			{
 				key: 'Material',
 				value: `${material} items`,
-				zeny_value: `${material_zeny.toLocaleString()}z`,
+				zeny_value: material_zeny,
 			},
-			{ key: 'Total zeny', zeny_value: `${total.toLocaleString()}z` },
+			{ key: 'Total zeny', zeny_value: total },
 		];
 	});
 </script>
@@ -79,7 +75,8 @@
 						<DropdownMenu.Label>Equipment state</DropdownMenu.Label>
 						<DropdownMenu.Separator />
 						<DropdownMenu.RadioGroup bind:value={parameters.current.equipment.state}>
-							{#each Object.entries(EquipmentState) as [key, value]}
+							{#each Object.values(EquipmentState) as value, idx}
+								{@const key = idx > 0 ? `Broken +${idx}` : 'Clean'}
 								<DropdownMenu.RadioItem {value}>{key}</DropdownMenu.RadioItem>
 							{/each}
 						</DropdownMenu.RadioGroup>
@@ -89,7 +86,7 @@
 		</div>
 
 		<p class="text-xs font-medium">
-			Equipment price: <span class="underline">{equipment_price.toLocaleString()}z</span>
+			Equipment price: <span class="underline">{formatZeny(equipment_price)}</span>
 		</p>
 	</div>
 
@@ -114,9 +111,9 @@
 	<div class="flex flex-col space-y-2 sm:col-span-2">
 		<Label for="refine_range">Refine range</Label>
 
-		<input type="hidden" id="refine_range" value="{refine_from}-{refine_to}" />
 		<Slider
 			type="multiple"
+			id="refine_range"
 			bind:value={parameters.current.refine_range}
 			max={15}
 			thumbPositioning="contain"
@@ -124,19 +121,18 @@
 	</div>
 </div>
 
-<h2>You're going to need...</h2>
-
 <Separator class="my-2" />
 
 <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
 	{#each output as { key, value, zeny_value }}
-		<div class="flex flex-col -space-y-1 text-center sm:text-end">
+		{@const zeny_cost = formatZeny(zeny_value)}
+		<div class="-space-y-1 text-center sm:text-end">
 			<p class="text-sm font-medium">{key}</p>
 			<p class="text-lg font-semibold underline">
 				{#if value !== undefined}
-					{value} / {zeny_value}
+					{value} / {zeny_cost}
 				{:else}
-					{zeny_value}
+					{zeny_cost}
 				{/if}
 			</p>
 		</div>

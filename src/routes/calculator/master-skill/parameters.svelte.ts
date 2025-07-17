@@ -1,8 +1,8 @@
-import { MasterSkill } from '$lib/calc/master-skill';
+import { MasterSkill, type MasterSkillLevel } from '$lib/calc/master-skill';
 import { persistedState } from 'svelte-persisted-state';
 
 export interface Parameters {
-	levels: Record<MasterSkill, [number, number]>;
+	levels: MasterSkillLevel;
 }
 
 const default_parameters: Parameters = {
