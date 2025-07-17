@@ -119,6 +119,14 @@
 		@apply bg-background text-foreground;
 	}
 
+	@media (prefers-reduced-motion) {
+		::view-transition-group(*),
+		::view-transition-old(*),
+		::view-transition-new(*) {
+			animation: none !important;
+		}
+	}
+
 	h1 {
 		@apply text-2xl font-bold sm:text-4xl;
 	}

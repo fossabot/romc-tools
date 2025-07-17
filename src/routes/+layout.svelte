@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { onNavigate } from '$app/navigation';
-	import { base } from '$app/paths';
 	import { page } from '$app/state';
-	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
-	import { cn } from '$lib/utils';
 	import { ModeWatcher } from 'mode-watcher';
+	import Header from './Header.svelte';
 	import '../app.css';
 
 	let { children } = $props();
@@ -45,22 +43,7 @@
 <ModeWatcher />
 
 <div class="flex min-h-[100vh] flex-col">
-	<nav
-		class="flex w-full items-center border-b px-8 py-4 max-sm:flex-col max-sm:space-y-1 sm:space-x-2"
-	>
-		{#each routes as { id, title }}
-			{@const href = `${base}${id}`}
-			{@const active = page.url.pathname === href}
-			<Button
-				{href}
-				variant="ghost"
-				aria-current={active ? 'page' : 'false'}
-				class={cn(active && 'underline')}
-			>
-				{title}
-			</Button>
-		{/each}
-	</nav>
+	<Header {routes} />
 
 	<main class="mx-6 my-4 flex flex-1 flex-col sm:mx-auto sm:w-[60ch]">
 		<div
@@ -79,88 +62,70 @@
 </div>
 
 <style>
-	@media not (prefers-reduced-motion) {
-		:root {
-			view-transition-name: none;
+	:root {
+		view-transition-name: none;
+	}
+
+	:root::view-transition-old(heading),
+	:root::view-transition-new(heading) {
+		animation-timing-function: ease-in-out;
+		animation-name: fade;
+		animation-duration: 0.3s;
+	}
+
+	:root::view-transition-old(*) {
+		animation-timing-function: linear;
+		animation-duration: 0.25s;
+		animation-direction: normal;
+	}
+
+	:root::view-transition-new(*) {
+		animation-timing-function: ease-in;
+		animation-duration: 0.3s;
+		animation-direction: reverse;
+	}
+
+	:root::view-transition-old(content-slide-1),
+	:root::view-transition-new(content-slide-2) {
+		animation-name: fade;
+	}
+
+	:root::view-transition-new(content-slide-1),
+	:root::view-transition-old(content-slide-2) {
+		animation-name: slide-down, fade;
+	}
+
+	@media (width > 40rem /* sm breakpoint */) {
+		:root::view-transition-old(content-slide-1),
+		:root::view-transition-new(content-slide-2) {
+			animation-name: slide-left, fade;
 		}
 
-		:global(::view-transition-old(heading)),
-		:global(::view-transition-new(heading)) {
-			animation-timing-function: ease-in-out;
-			animation-name: fade;
-			animation-duration: 0.3s;
-		}
-
-		:global(::view-transition-old(*)) {
-			animation-timing-function: linear;
-			animation-duration: 0.25s;
-			animation-direction: normal;
-		}
-
-		:global(::view-transition-new(*)) {
-			animation-timing-function: ease-in;
-			animation-duration: 0.3s;
-			animation-direction: reverse;
-		}
-
-		:global(::view-transition-old(content-slide-1)),
-		:global(::view-transition-new(content-slide-2)) {
-			animation-name: fade;
-		}
-
-		:global(::view-transition-new(content-slide-1)),
-		:global(::view-transition-old(content-slide-2)) {
-			animation-name: slide-down, fade;
-		}
-
-		@media (width > 40rem /* sm breakpoint */) {
-			:global(::view-transition-old(content-slide-1)),
-			:global(::view-transition-new(content-slide-2)) {
-				animation-name: slide-left, fade;
-			}
-
-			:global(::view-transition-new(content-slide-1)),
-			:global(::view-transition-old(content-slide-2)) {
-				animation-name: slide-right, fade;
-			}
+		:root::view-transition-new(content-slide-1),
+		:root::view-transition-old(content-slide-2) {
+			animation-name: slide-right, fade;
 		}
 	}
 
 	@keyframes slide-right {
-		from {
-			transform: translateX(0);
-		}
-
 		to {
 			transform: translateX(50%);
 		}
 	}
 
 	@keyframes slide-left {
-		from {
-			transform: translateX(0);
-		}
-
 		to {
 			transform: translateX(-50%);
 		}
 	}
 
 	@keyframes slide-down {
-		from {
-			transform: translateY(0);
-		}
-
 		to {
 			transform: translateY(34%);
 		}
 	}
 
 	@keyframes fade {
-		from {
-			opacity: 100%;
-		}
-
 		to {
 			opacity: 0%;
 		}
