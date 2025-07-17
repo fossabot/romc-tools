@@ -7,10 +7,10 @@ export interface Parameters {
 
 const default_parameters: Parameters = {
 	levels: {
-		[MasterSkill.Active]: [0, 10],
+		[MasterSkill.Active]: [0, 5],
 		[MasterSkill.Passive1]: [0, 5],
 		[MasterSkill.Passive2]: [0, 5],
-		[MasterSkill.Passive3]: [0, 10],
+		[MasterSkill.Passive3]: [0, 5],
 	},
 };
 

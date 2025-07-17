@@ -13,9 +13,9 @@ export interface Parameters {
 }
 
 const default_parameters: Parameters = {
-	equipment: { base_price: 300_000, state: EquipmentState.Clean },
-	options: { apply_home_rating_discount: false, exclude_material_cost: false },
-	refine_range: [8, 12],
+	equipment: { base_price: 750_000, state: EquipmentState.Broken3 },
+	options: { apply_home_rating_discount: true, exclude_material_cost: false },
+	refine_range: [6, 12],
 };
 
 export const parameters = persistedState('safe-refine-parameters', default_parameters, {
