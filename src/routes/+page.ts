@@ -1,3 +1,3 @@
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = () => ({ title: 'Blank page' });
+export const load: PageLoad = () => ({ title: 'Home' });
