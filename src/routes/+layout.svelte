@@ -14,6 +14,7 @@
 		{ id: '/', title: 'Home' },
 		{ id: '/calculator/master-skill', title: 'Master skill' },
 		{ id: '/calculator/safe-refine', title: 'Safe refine' },
+		{ id: '/calculator/skill-inheritance', title: 'Skill inheritance' },
 	];
 
 	let transition_name = $state<'slide-1' | 'slide-2'>('slide-1');
