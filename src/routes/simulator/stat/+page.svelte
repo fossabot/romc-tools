@@ -38,8 +38,8 @@
 
 	<ul class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
 		{#each stat_names as stat}
-			{@const add_stat = () => (allocations[stat] += 1)}
-			{@const sub_stat = () => (allocations[stat] -= 1)}
+			{@const increment = () => (allocations[stat] += 1)}
+			{@const decrement = () => (allocations[stat] -= 1)}
 			{@const current_stat = allocations[stat]}
 			{@const max_stat_possible = get_max_stat_possible(current_stat, remaining_points, max_stat)}
 
@@ -66,12 +66,14 @@
 					</Popover.Content>
 				</Popover.Root>
 
-				<Button size="icon" disabled={current_stat >= max_stat_possible} onclick={add_stat}>
+				<Button size="icon" disabled={current_stat >= max_stat_possible} onclick={increment}>
 					<Plus />
+					<span class="sr-only">Increment {stat}</span>
 				</Button>
 
-				<Button size="icon" disabled={current_stat <= 0} onclick={sub_stat}>
+				<Button size="icon" disabled={current_stat <= 0} onclick={decrement}>
 					<Minus />
+					<span class="sr-only">Decrement {stat}</span>
 				</Button>
 			</li>
 		{/each}
