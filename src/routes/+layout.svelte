@@ -82,24 +82,14 @@
 		animation-duration: 0.3s;
 		animation-direction: reverse;
 	}
-
 	:root::view-transition-old(content-slide-1),
-	:root::view-transition-old(content-slide-2),
-	:root::view-transition-new(content-slide-1),
 	:root::view-transition-new(content-slide-2) {
-		animation-name: slide-down, fade;
+		animation-name: slide-left, fade;
 	}
 
-	@media (width > 40rem /* sm breakpoint */) {
-		:root::view-transition-old(content-slide-1),
-		:root::view-transition-new(content-slide-2) {
-			animation-name: slide-left, fade;
-		}
-
-		:root::view-transition-new(content-slide-1),
-		:root::view-transition-old(content-slide-2) {
-			animation-name: slide-right, fade;
-		}
+	:root::view-transition-new(content-slide-1),
+	:root::view-transition-old(content-slide-2) {
+		animation-name: slide-right, fade;
 	}
 
 	@keyframes slide-right {
@@ -111,12 +101,6 @@
 	@keyframes slide-left {
 		to {
 			transform: translateX(-50%);
-		}
-	}
-
-	@keyframes slide-down {
-		to {
-			transform: translateY(34%);
 		}
 	}
 

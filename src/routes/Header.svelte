@@ -34,7 +34,7 @@
 <header class="border-b px-8 py-4">
 	<nav class="w-full">
 		<ul
-			class="grid grid-cols-2 items-center justify-center justify-items-center gap-2 sm:flex sm:space-x-2"
+			class="grid grid-flow-col grid-cols-2 grid-rows-3 items-center justify-center justify-items-center gap-2 sm:flex sm:space-x-2"
 		>
 			{@render nav_link({ id: '/', title: 'Home' }, true)}
 
