@@ -38,7 +38,7 @@
 </script>
 
 <svelte:head>
-	<title>{title} &bull; ROM:C Tools</title>
+	<title>{title} &bull; ROMC Tools</title>
 </svelte:head>
 
 <ModeWatcher />
