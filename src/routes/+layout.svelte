@@ -8,7 +8,7 @@
 
 	let { children } = $props();
 
-	const { title = 'Error' } = $derived(page.data);
+	const { title = '[object Object]', description = '[object Object]' } = $derived(page.data);
 
 	const routes = [
 		{ id: '/calculator/master-skill', title: 'Master skill' },
@@ -39,6 +39,7 @@
 
 <svelte:head>
 	<title>{title} &bull; ROMC Tools</title>
+	<meta name="description" content={description} />
 </svelte:head>
 
 <ModeWatcher />
