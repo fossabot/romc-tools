@@ -7,8 +7,9 @@
 		value = $bindable(),
 		orientation = 'horizontal',
 		class: className,
+		showTicks = true,
 		...restProps
-	}: WithoutChildrenOrChild<SliderPrimitive.RootProps> = $props();
+	}: WithoutChildrenOrChild<SliderPrimitive.RootProps> & { showTicks?: boolean } = $props();
 </script>
 
 <!--
@@ -21,7 +22,8 @@ get along, so we shut typescript up by casting `value` to `never`.
 	data-slot="slider"
 	{orientation}
 	class={cn(
-		'relative mb-4 flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col',
+		'relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col',
+		showTicks && 'mb-4',
 		className
 	)}
 	{...restProps}
@@ -48,15 +50,17 @@ get along, so we shut typescript up by casting `value` to `never`.
 				class="border-primary bg-background ring-ring/50 block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
 			/>
 		{/each}
-		{#each tickItems as { value, index } (index)}
-			<SliderPrimitive.Tick {index} class="bg-background h-2 w-[1px]" />
-			<SliderPrimitive.TickLabel
-				{index}
-				position="bottom"
-				class="text-muted-foreground data-bounded:text-foreground text-sm font-medium"
-			>
-				{value}
-			</SliderPrimitive.TickLabel>
-		{/each}
+		{#if showTicks}
+			{#each tickItems as { value, index } (index)}
+				<SliderPrimitive.Tick {index} class="bg-background h-2 w-[1px]" />
+				<SliderPrimitive.TickLabel
+					{index}
+					position="bottom"
+					class="text-muted-foreground data-bounded:text-foreground text-sm font-medium"
+				>
+					{value}
+				</SliderPrimitive.TickLabel>
+			{/each}
+		{/if}
 	{/snippet}
 </SliderPrimitive.Root>

@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import { Separator } from '$lib/components/ui/separator';
 	import { ModeWatcher } from 'mode-watcher';
-	import Header from './Header.svelte';
+	import Header, { type NavLink } from './Header.svelte';
 	import '../app.css';
 
 	let { children } = $props();
@@ -11,11 +11,11 @@
 	const { title = 'Error' } = $derived(page.data);
 
 	const routes = [
-		{ id: '/', title: 'Home' },
 		{ id: '/calculator/master-skill', title: 'Master skill' },
 		{ id: '/calculator/safe-refine', title: 'Safe refine' },
 		{ id: '/calculator/skill-inheritance', title: 'Skill inheritance' },
-	];
+		{ id: '/simulator/stat', title: 'Stat simulator' },
+	] satisfies NavLink[];
 
 	let transition_name = $state<'slide-1' | 'slide-2'>('slide-1');
 	onNavigate((navigation) => {

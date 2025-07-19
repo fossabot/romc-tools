@@ -1,24 +1,43 @@
+<script module lang="ts">
+	export interface NavLink {
+		id: string;
+		title: string;
+	}
+</script>
+
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
+	import { cn } from '$lib/utils';
 
 	interface Props {
-		routes: { id: string; title: string }[];
+		routes: NavLink[];
 	}
 
 	const { routes }: Props = $props();
 </script>
 
+{#snippet nav_link({ id, title }: NavLink, className?: string)}
+	{@const href = `${base}${id}`}
+	{@const active = page.url.pathname === href}
+	<li
+		aria-current={active ? 'page' : 'false'}
+		class={cn('relative h-full', active && 'max-sm:underline', className)}
+	>
+		<Button {href} variant="ghost">{title}</Button>
+	</li>
+{/snippet}
+
 <header class="border-b px-8 py-4">
 	<nav class="w-full">
-		<ul class="flex items-center justify-center max-sm:flex-col max-sm:space-y-1 sm:space-x-2">
-			{#each routes as { id, title }}
-				{@const href = `${base}${id}`}
-				{@const active = page.url.pathname === href}
-				<li aria-current={active ? 'page' : 'false'} class="relative h-full">
-					<Button {href} variant="ghost" class="max-sm:w-32">{title}</Button>
-				</li>
+		<ul
+			class="grid grid-cols-2 items-center justify-center justify-items-center gap-2 sm:flex sm:space-x-2"
+		>
+			{@render nav_link({ id: '/', title: 'Home' }, 'col-span-2')}
+
+			{#each routes as route}
+				{@render nav_link(route)}
 			{/each}
 		</ul>
 	</nav>
@@ -26,22 +45,22 @@
 
 <style>
 	li[aria-current='page']::before {
+		--size: 4px;
 		content: '';
 		position: absolute;
+		left: calc(50% - var(--size));
 		bottom: 0;
-		height: 100%;
-		width: 100%;
-		border-width: 0px 2px;
-		border-style: solid;
-		border-color: currentColor;
+		border: var(--size) solid transparent;
+		border-bottom-color: currentColor;
 		view-transition-name: active-page-indicator;
 	}
 
 	@media (width > 40rem) {
 		li[aria-current='page']::before {
-			border-width: 0px;
-			height: 0;
-			border-bottom-width: 2px;
+			width: 100%;
+			left: 0;
+			border: 0;
+			border-bottom: 2px solid currentColor;
 		}
 	}
 </style>
