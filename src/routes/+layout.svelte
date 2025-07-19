@@ -19,10 +19,10 @@
 
 	let transition_name = $state<'slide-1' | 'slide-2'>('slide-1');
 	onNavigate((navigation) => {
-		const { from, to } = navigation;
-		if (!document.startViewTransition || from?.route.id === to?.route.id) return;
+		if (!document.startViewTransition) return;
 
 		return new Promise((resolve) => {
+			const { from, to } = navigation;
 			transition_name =
 				routes.findIndex(({ id }) => id === from?.route.id) <
 				routes.findIndex(({ id }) => id === to?.route.id)
@@ -47,11 +47,13 @@
 	<Header {routes} />
 
 	<main class="mx-6 my-4 flex flex-1 flex-col sm:mx-auto sm:w-[60ch]">
-		<div
-			class="flex h-12 items-center justify-center sm:h-16"
-			style="view-transition-name: heading;"
-		>
-			<h1 class="text-center">{title}</h1>
+		<div class="flex h-12 items-center justify-center sm:h-16">
+			<h1
+				class="text-center"
+				style="view-transition-name: nav{page.url.pathname.replaceAll('/', '-')};"
+			>
+				{title}
+			</h1>
 		</div>
 
 		<Separator class="my-2" />
@@ -67,32 +69,24 @@
 		view-transition-name: none;
 	}
 
-	:root::view-transition-old(heading),
-	:root::view-transition-new(heading) {
-		animation-timing-function: ease-in-out;
-		animation-name: fade;
+	:root::view-transition-old(content-slide-1),
+	:root::view-transition-old(content-slide-2) {
+		animation-timing-function: ease-out;
 		animation-duration: 0.3s;
-	}
-
-	:root::view-transition-old(*) {
-		animation-timing-function: linear;
-		animation-duration: 0.25s;
 		animation-direction: normal;
 	}
 
-	:root::view-transition-new(*) {
+	:root::view-transition-new(content-slide-1),
+	:root::view-transition-new(content-slide-2) {
 		animation-timing-function: ease-in;
 		animation-duration: 0.3s;
 		animation-direction: reverse;
 	}
 
 	:root::view-transition-old(content-slide-1),
-	:root::view-transition-new(content-slide-2) {
-		animation-name: fade;
-	}
-
+	:root::view-transition-old(content-slide-2),
 	:root::view-transition-new(content-slide-1),
-	:root::view-transition-old(content-slide-2) {
+	:root::view-transition-new(content-slide-2) {
 		animation-name: slide-down, fade;
 	}
 
