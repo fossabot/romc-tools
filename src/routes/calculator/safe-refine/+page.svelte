@@ -14,8 +14,7 @@
 	import { formatZeny } from '$lib/utils';
 	import { parameters } from './parameters.svelte';
 
-	const { equipment, options, refine_range } = $derived(parameters.current);
-
+	let { equipment, options, refine_range } = $derived(parameters.current);
 	const equipment_price = $derived(calculate_equipment_price(equipment));
 
 	const refine_cost = $derived(
@@ -54,7 +53,7 @@
 		<div class="flex items-center space-x-2">
 			<Input
 				type="number"
-				bind:value={parameters.current.equipment.base_price}
+				bind:value={equipment.base_price}
 				id="base_equipment_price"
 				min="0"
 				step="10000"
@@ -74,7 +73,7 @@
 					<DropdownMenu.Group>
 						<DropdownMenu.Label>Equipment state</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<DropdownMenu.RadioGroup bind:value={parameters.current.equipment.state}>
+						<DropdownMenu.RadioGroup bind:value={equipment.state}>
 							{#each Object.values(EquipmentState) as value, idx}
 								{@const key = idx > 0 ? `Broken +${idx}` : 'Clean'}
 								<DropdownMenu.RadioItem {value}>{key}</DropdownMenu.RadioItem>
@@ -92,18 +91,12 @@
 
 	<div class="flex max-sm:space-x-4 sm:flex-col">
 		<div class="flex flex-1 items-center space-x-2">
-			<Switch
-				bind:checked={parameters.current.options.apply_home_rating_discount}
-				id="apply_home_rating_discount"
-			/>
+			<Switch bind:checked={options.apply_home_rating_discount} id="apply_home_rating_discount" />
 			<Label for="apply_home_rating_discount">Apply home rating discount</Label>
 		</div>
 
 		<div class="flex flex-1 items-center space-x-2">
-			<Switch
-				bind:checked={parameters.current.options.exclude_material_cost}
-				id="exclude_material_cost"
-			/>
+			<Switch bind:checked={options.exclude_material_cost} id="exclude_material_cost" />
 			<Label for="exclude_material_cost">Exclude material zeny cost</Label>
 		</div>
 	</div>
@@ -111,13 +104,7 @@
 	<div class="flex flex-col space-y-2 sm:col-span-2">
 		<Label for="refine_range">Refine range</Label>
 
-		<Slider
-			type="multiple"
-			id="refine_range"
-			bind:value={parameters.current.refine_range}
-			max={15}
-			thumbPositioning="contain"
-		/>
+		<Slider type="multiple" id="refine_range" bind:value={refine_range} max={15} />
 	</div>
 </div>
 

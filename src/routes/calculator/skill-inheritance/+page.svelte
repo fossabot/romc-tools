@@ -9,7 +9,7 @@
 	import { formatZeny } from '$lib/utils';
 	import { parameters } from './parameters.svelte';
 
-	const { quality, level } = $derived(parameters.current);
+	let { quality, level } = $derived(parameters.current);
 
 	const shard_cost = $derived(calculate_skill_inheritance_shard(quality, level));
 	const zeny_cost = $derived(formatZeny(shard_cost * 1_200_000));
@@ -18,7 +18,7 @@
 <div class="mt-6 mb-8 flex flex-col space-y-4">
 	<div class="flex flex-col items-center space-y-2">
 		<Label for="inheritance_quality">Inheritance skill quality</Label>
-		<Select.Root type="single" bind:value={parameters.current.quality}>
+		<Select.Root type="single" bind:value={quality}>
 			<Select.Trigger id="inheritance_quality" class="w-48">{quality}</Select.Trigger>
 			<Select.Content>
 				{#each Object.values(InheritanceQuality) as value}
@@ -37,6 +37,6 @@
 			</p>
 		</div>
 
-		<Slider type="multiple" id="inheritance_level" bind:value={parameters.current.level} max={10} />
+		<Slider type="multiple" id="inheritance_level" bind:value={level} max={10} />
 	</div>
 </div>

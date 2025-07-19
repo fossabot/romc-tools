@@ -6,7 +6,7 @@
 	import { formatZeny, sum } from '$lib/utils';
 	import { parameters } from './parameters.svelte';
 
-	const { levels } = $derived(parameters.current);
+	let { levels } = $derived(parameters.current);
 
 	const cost = $derived(calculate_master_skill_cost(levels));
 	const total_cost = $derived(sum(Object.values(cost)));
@@ -21,12 +21,7 @@
 				<span class="font-medium underline">{zeny_cost}</span>
 			</div>
 
-			<Slider
-				type="multiple"
-				id="{key}_range"
-				bind:value={parameters.current.levels[name]}
-				max={costs[name].length}
-			/>
+			<Slider type="multiple" id="{key}_range" bind:value={levels[name]} max={costs[name].length} />
 		</div>
 	{/each}
 </div>
