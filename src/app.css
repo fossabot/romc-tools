@@ -116,12 +116,11 @@
 		@apply border-border outline-ring/50;
 
 		scrollbar-width: thin;
+		scrollbar-gutter: stable;
 	}
 
 	body {
 		@apply bg-background text-foreground;
-
-		overflow-y: scroll;
 	}
 
 	@media (prefers-reduced-motion) {
