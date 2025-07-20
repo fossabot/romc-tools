@@ -4,6 +4,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { ModeWatcher } from 'mode-watcher';
 	import Header, { type NavLink } from './Header.svelte';
+	import Footer from './Footer.svelte';
 	import '../app.css';
 
 	let { children } = $props();
@@ -63,6 +64,8 @@
 			{@render children()}
 		</div>
 	</main>
+
+	<Footer />
 </div>
 
 <style>

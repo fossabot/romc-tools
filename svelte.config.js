@@ -1,3 +1,4 @@
+import { execSync } from 'node:child_process';
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
@@ -12,6 +13,9 @@ const config = {
 		}),
 		paths: {
 			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH,
+		},
+		version: {
+			name: execSync('git rev-parse HEAD').toString().trim(),
 		},
 		alias: {
 			'@/*': './path/to/lib/*',
