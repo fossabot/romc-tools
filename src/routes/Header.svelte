@@ -20,7 +20,7 @@
 {#snippet nav_link({ id, title }: NavLink, isHome: boolean = false)}
 	{@const href = `${base}${id}`}
 	{@const active = page.url.pathname === href}
-	{@const transition_name = active ? 'unset' : `nav${id.replaceAll('/', '-')}`}
+	{@const transition_name = active ? 'unset' : `nav${href.replaceAll('/', '-')}`}
 
 	<li
 		aria-current={active ? 'page' : 'false'}
