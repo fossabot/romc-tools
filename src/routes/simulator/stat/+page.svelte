@@ -1,5 +1,10 @@
 <script lang="ts">
-	import { get_max_stat_possible, get_total_stat_cost, stat_names } from '$lib/calc/stat-simulator';
+	import {
+		get_max_stat_possible,
+		get_next_stat_cost,
+		get_total_stat_cost,
+		stat_names,
+	} from '$lib/calc/stat-simulator';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
@@ -41,14 +46,20 @@
 			{@const increment = () => (allocations[stat] += 1)}
 			{@const decrement = () => (allocations[stat] -= 1)}
 			{@const current_stat = allocations[stat]}
+			{@const next_stat_cost = get_next_stat_cost(current_stat)}
 			{@const max_stat_possible = get_max_stat_possible(current_stat, remaining_points, max_stat)}
 
 			<li class="flex items-center space-x-2">
 				<Popover.Root>
 					<Popover.Trigger
-						class={buttonVariants({ variant: 'outline', class: 'flex-1 font-medium select-none' })}
+						class={buttonVariants({
+							variant: 'outline',
+							class: 'inline-flex flex-1 font-medium select-none',
+						})}
 					>
-						{stat} +{current_stat}
+						<span class="flex-1">{stat} +{current_stat}</span>
+						<Separator orientation="vertical" class="mx-2" />
+						<span>{next_stat_cost}</span>
 					</Popover.Trigger>
 					<Popover.Content>
 						<Label for="allocated_{stat}">Set {stat} value</Label>
