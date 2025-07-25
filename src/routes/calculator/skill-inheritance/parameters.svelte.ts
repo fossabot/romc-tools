@@ -6,7 +6,7 @@ export interface Parameters {
 	level: InheritanceRange;
 }
 
-export const parameters = persistedParameters<Parameters>('safe-refine-parameters', {
+export const parameters = persistedParameters<Parameters>('skill-inheritance-parameters', {
 	quality: InheritanceQuality.Rank2,
 	level: [0, 5],
 });
