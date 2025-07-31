@@ -9,6 +9,8 @@ export function cn(...inputs: ClassValue[]) {
 const numberFormat = Intl.NumberFormat('en-US');
 export const formatZeny = (zeny: number) => `${numberFormat.format(zeny)}z`;
 export const sum = (array: number[]) => array.reduce((a, b) => a + b, 0);
+export const transpose = <T>(arrays: T[][]) =>
+	arrays[0].map((_, col_idx) => arrays.map((row) => row[col_idx]));
 
 export const persistedParameters = <T extends object>(name: string, default_parameters: T) =>
 	persistedState(name, default_parameters, {

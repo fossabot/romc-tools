@@ -1,21 +1,24 @@
 <script lang="ts">
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
+	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
+	import { Switch } from '$lib/components/ui/switch';
 	import * as Table from '$lib/components/ui/table';
 	import { table_lookup, type TableName } from '$lib/data';
-	import { cn } from '$lib/utils';
+	import { cn, transpose } from '$lib/utils';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 
 	let table = $state(data.table);
+	let transpose_table = $state(false);
 	const table_data = $derived(
 		table !== undefined ? table_lookup[table]().then(({ get_table }) => get_table()) : undefined
 	);
 </script>
 
-<div class="mt-8 mb-6 flex justify-center">
+<div class="mt-8 mb-6 flex justify-center space-x-4">
 	<Select.Root
 		type="single"
 		value={table}
@@ -27,13 +30,18 @@
 			replaceState(`?${params.toString()}`, { table });
 		}}
 	>
-		<Select.Trigger class="w-48">{table ?? 'Select a table'}</Select.Trigger>
+		<Select.Trigger class="w-36">{table ?? 'Select a table'}</Select.Trigger>
 		<Select.Content>
 			{#each Object.keys(table_lookup) as name}
 				<Select.Item value={name}>{name}</Select.Item>
 			{/each}
 		</Select.Content>
 	</Select.Root>
+
+	<div class="flex items-center space-x-2">
+		<Switch id="transpose_table" bind:checked={transpose_table} />
+		<Label for="transpose_table">Transpose</Label>
+	</div>
 </div>
 
 <Table.Root>
@@ -42,7 +50,8 @@
 	{:else}
 		{#await table_data}
 			<Table.Caption>Loading data...</Table.Caption>
-		{:then { caption, rows: [headers, ...rows] }}
+		{:then { caption, rows: _rows }}
+			{@const [headers, ...rows] = transpose_table ? transpose(_rows) : _rows}
 			<Table.Caption>{caption}</Table.Caption>
 			<Table.Header>
 				<Table.Row>
