@@ -1,4 +1,5 @@
-import { sum } from '$lib/utils';
+import type { TableData } from '$lib/data';
+import { formatZeny, sum } from '$lib/utils';
 
 export enum MasterSkill {
 	Active = 'Active',
@@ -37,3 +38,22 @@ export const calculate_master_skill_cost = (levels: MasterSkillLevel) =>
 			.map(([key, value]) => [key as keyof MasterSkillLevel, value] as const)
 			.map(([key, [from, to]]) => [key, sum(costs[key].slice(from, to))])
 	) as Record<keyof MasterSkillLevel, number>;
+
+export const get_table = (): TableData => ({
+	caption: 'Master skill cost data.',
+	rows: [
+		['Master skill', ...Array.from({ length: 10 }, (_, idx) => `Lv. ${idx + 1}`), 'Total'],
+		...Object.entries(costs).map(([key, costs]) => [
+			key,
+			...costs.map(formatZeny),
+			...Array.from(
+				{
+					// add padding for 1st and 2nd passive since they're only up to Lv. 5
+					length: key === MasterSkill.Passive1 || key === MasterSkill.Passive2 ? 5 : 0,
+				},
+				() => 'n/a'
+			),
+			formatZeny(sum(costs)),
+		]),
+	],
+});

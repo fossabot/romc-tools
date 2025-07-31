@@ -1,4 +1,6 @@
 <script>
+	import { page } from '$app/state';
+	import { Button } from '$lib/components/ui/button';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { SOURCE_CODE_URL, VERSION } from '$lib/constants';
 </script>
@@ -16,6 +18,14 @@
 	</Tooltip.Provider>
 {/snippet}
 
-<footer class="flex justify-center border-t px-8 py-6 sm:justify-end sm:py-4">
-	<p class="text-sm font-medium">romc-tools @ {@render source_code_link()}</p>
+<footer class="flex items-center justify-between border-t px-8 py-6 text-sm font-medium sm:py-4">
+	{#if page.data.data_id !== undefined}
+		<a
+			href="/data?table={page.data.data_id}"
+			class="underline"
+			style:view-transition-name="nav-data">Raw data</a
+		>
+	{/if}
+
+	<p class="flex-1 text-end">romc-tools @ {@render source_code_link()}</p>
 </footer>

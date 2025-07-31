@@ -1,3 +1,6 @@
+import type { TableData } from '$lib/data';
+import { formatZeny, sum } from '$lib/utils';
+
 export interface SafeRefineCost {
 	/** The zeny cost */
 	zeny: number;
@@ -87,4 +90,24 @@ export const calculate_equipment_price = ({
 		.reduce((a, b) => a + b);
 
 	return Math.ceil(base_price / 2) + total_refine_value;
+};
+
+export const get_table = (): TableData => {
+	const copies = costs.map(({ copy }) => copy);
+	const materials = costs.map(({ material }) => material);
+	const zenies = costs.map(({ zeny }) => zeny);
+
+	return {
+		caption: 'Safe refine cost data.',
+		rows: [
+			['Safe refine', ...Array.from({ length: 15 }, (_, idx) => `+${idx + 1}`), 'Total'],
+			[
+				'Equipment',
+				...copies.map((copy) => (copy > 0 ? `${copy} copies` : 'none')),
+				`${sum(copies)} copies`,
+			],
+			['Material', ...materials.map((material) => `${material} items`), `${sum(materials)} items`],
+			['Zeny', ...zenies.map((zeny) => formatZeny(zeny)), formatZeny(sum(zenies))],
+		],
+	};
 };

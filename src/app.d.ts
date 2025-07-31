@@ -1,4 +1,7 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
+
+import type { TableName } from '$lib/data';
+
 // for information about these interfaces
 declare global {
 	namespace App {
@@ -7,6 +10,8 @@ declare global {
 		interface PageData {
 			title?: string;
 			description?: string;
+
+			data_id?: TableName;
 		}
 		// interface PageState {}
 		// interface Platform {}
