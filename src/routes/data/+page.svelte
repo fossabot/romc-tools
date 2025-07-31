@@ -1,12 +1,14 @@
 <script lang="ts">
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
+
 	import { Label } from '$lib/components/ui/label';
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Table from '$lib/components/ui/table';
 	import { table_lookup, type TableName } from '$lib/data';
 	import { cn, transpose } from '$lib/utils';
+
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();

@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { ModeWatcher } from 'mode-watcher';
+
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
+
 	import { Separator } from '$lib/components/ui/separator';
-	import { ModeWatcher } from 'mode-watcher';
-	import Header, { type NavLink } from './Header.svelte';
-	import Footer from './Footer.svelte';
+
 	import '../app.css';
+	import Footer from './Footer.svelte';
+	import Header, { type NavLink } from './Header.svelte';
 
 	let { children } = $props();
 

@@ -1,6 +1,6 @@
 <script>
 	import { page } from '$app/state';
-	import { Button } from '$lib/components/ui/button';
+
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { SOURCE_CODE_URL, VERSION } from '$lib/constants';
 </script>

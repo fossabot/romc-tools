@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+
 import {
 	calculate_safe_refine_range,
 	calculate_equipment_price,

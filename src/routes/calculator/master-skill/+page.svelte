@@ -4,6 +4,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Slider } from '$lib/components/ui/slider';
 	import { formatZeny, sum } from '$lib/utils';
+
 	import { parameters } from './parameters.svelte';
 
 	const { levels } = $derived(parameters.current);

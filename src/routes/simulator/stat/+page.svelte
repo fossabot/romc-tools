@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { Plus, Minus } from '@lucide/svelte';
+
 	import {
 		get_max_stat_possible,
 		get_next_stat_cost,
@@ -12,8 +14,8 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Slider } from '$lib/components/ui/slider';
 	import { sum } from '$lib/utils';
+
 	import { parameters } from './parameters.svelte';
-	import { Plus, Minus } from '@lucide/svelte';
 
 	const { allocations, available_points: max_points, max_stat } = $derived(parameters.current);
 	const remaining_points = $derived(

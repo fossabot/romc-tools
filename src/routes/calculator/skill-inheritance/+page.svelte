@@ -7,6 +7,7 @@
 	import * as Select from '$lib/components/ui/select';
 	import { Slider } from '$lib/components/ui/slider';
 	import { formatZeny } from '$lib/utils';
+
 	import { parameters } from './parameters.svelte';
 
 	const { quality, level } = $derived(parameters.current);

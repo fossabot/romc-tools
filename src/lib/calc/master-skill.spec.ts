@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { calculate_master_skill_cost, costs, MasterSkill } from './master-skill';
+
 import { sum } from '$lib/utils';
+
+import { calculate_master_skill_cost, costs, MasterSkill } from './master-skill';
 
 describe('master skill cost data', () => {
 	it('should be defined correctly', () => {

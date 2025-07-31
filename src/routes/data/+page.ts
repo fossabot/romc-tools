@@ -1,4 +1,5 @@
 import { table_lookup, type TableName } from '$lib/data';
+
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = ({ url }) => {

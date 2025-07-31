@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { get_max_stat_possible, get_next_stat_cost, get_total_stat_cost } from './stat-simulator';
 
 describe('get next stat cost formula', () => {

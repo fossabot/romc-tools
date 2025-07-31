@@ -1,5 +1,4 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
-
 import type { TableName } from '$lib/data';
 
 // for information about these interfaces

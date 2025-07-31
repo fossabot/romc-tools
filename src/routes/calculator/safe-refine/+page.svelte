@@ -12,6 +12,7 @@
 	import { Slider } from '$lib/components/ui/slider';
 	import { Switch } from '$lib/components/ui/switch';
 	import { formatZeny } from '$lib/utils';
+
 	import { parameters } from './parameters.svelte';
 
 	const { equipment, options, refine_range } = $derived(parameters.current);

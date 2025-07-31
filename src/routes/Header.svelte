@@ -8,6 +8,7 @@
 <script lang="ts">
 	import { base } from '$app/paths';
 	import { page } from '$app/state';
+
 	import { Button } from '$lib/components/ui/button';
 
 	interface Props {

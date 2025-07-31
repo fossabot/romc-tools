@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { costs, InheritanceQuality } from './skill-inheritance';
 
 describe('skill inheritance cost data', () => {
