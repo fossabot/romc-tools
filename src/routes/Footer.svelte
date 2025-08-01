@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import { page } from '$app/state';
 
 	import * as Tooltip from '$lib/components/ui/tooltip';
@@ -21,7 +22,7 @@
 <footer class="flex items-center justify-between border-t px-8 py-6 text-sm font-medium sm:py-4">
 	{#if page.data.data_id !== undefined}
 		<a
-			href="/data?table={page.data.data_id}"
+			href="{base}/data?table={page.data.data_id}"
 			class="underline"
 			style:view-transition-name="nav-data">Raw data</a
 		>
