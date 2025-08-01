@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 
@@ -9,15 +11,16 @@
 	import { table_lookup, type TableName } from '$lib/data';
 	import { cn, transpose } from '$lib/utils';
 
-	import type { PageProps } from './$types';
-
-	let { data }: PageProps = $props();
-
-	let table = $state(data.table);
+	let table = $state<TableName>();
 	let transpose_table = $state(false);
 	const table_data = $derived(
 		table !== undefined ? table_lookup[table]().then(({ get_table }) => get_table()) : undefined
 	);
+
+	onMount(() => {
+		const _table = page.url.searchParams.get('table') ?? '';
+		if (_table in table_lookup) table = _table as TableName;
+	});
 </script>
 
 <div class="mt-8 mb-6 flex justify-center space-x-4">
