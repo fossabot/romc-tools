@@ -63,7 +63,10 @@
 
 <div class="flex flex-col space-y-2 sm:flex-col-reverse sm:space-y-reverse">
 	<div class="flex items-center text-sm font-medium">
-		<p class="flex-1">Remaining points: <span class="underline">{remaining_points}</span></p>
+		<p class="flex-1 flex flex-col">
+			<span>Used points: <span class="underline">{used_points}</span></span>
+			<span>Remaining points: <span class="underline">{remaining_points}</span></span>
+		</p>
 		<Button variant="destructive" size="sm" class="w-20" onclick={parameters.reset}>Reset</Button>
 	</div>
 
