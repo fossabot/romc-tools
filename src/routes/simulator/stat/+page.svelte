@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Plus, Minus } from '@lucide/svelte';
+	import { ChevronsRight, Plus, Minus } from '@lucide/svelte';
 	import { untrack } from 'svelte';
 
 	import {
@@ -70,13 +70,15 @@
 		<Button variant="destructive" size="sm" class="w-20" onclick={parameters.reset}>Reset</Button>
 	</div>
 
-	<ul class="grid gap-x-8 gap-y-2 sm:grid-cols-2">
+	<ul class="grid gap-y-2">
 		{#each stat_names as stat}
-			{@const increment = () => (parameters.current.allocations[stat] += 1)}
-			{@const decrement = () => (parameters.current.allocations[stat] -= 1)}
 			{@const current_stat = allocations[stat]}
 			{@const next_stat_cost = get_next_stat_cost(current_stat)}
 			{@const max_stat_possible = get_max_stat_possible(current_stat, remaining_points, max_stat)}
+
+			{@const increment = () => (parameters.current.allocations[stat] += 1)}
+			{@const decrement = () => (parameters.current.allocations[stat] -= 1)}
+			{@const max_out = () => (parameters.current.allocations[stat] = max_stat_possible)}
 
 			<li class="flex items-center space-x-2">
 				<Popover.Root>
@@ -101,7 +103,7 @@
 								bind:value={parameters.current.allocations[stat]}
 								disabled={remaining_points < 0}
 							/>
-							<span>{max_stat_possible}</span>
+							<span class="font-medium text-sm">{max_stat_possible}</span>
 						</div>
 					</Popover.Content>
 				</Popover.Root>
@@ -114,6 +116,11 @@
 				<Button size="icon" disabled={current_stat <= 0} onclick={decrement}>
 					<Minus />
 					<span class="sr-only">Decrement {stat}</span>
+				</Button>
+
+				<Button size="icon" disabled={current_stat >= max_stat_possible} onclick={max_out}>
+					<ChevronsRight />
+					<span class="sr-only">Max out {stat}</span>
 				</Button>
 			</li>
 		{/each}
