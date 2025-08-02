@@ -15,7 +15,7 @@ export const get_max_stat_possible = (
 	max_stat: number
 ): number =>
 	allocated >= max_stat || remaining_points < get_next_stat_cost(allocated)
-		? allocated
+		? Math.min(allocated, max_stat)
 		: get_max_stat_possible(
 				allocated + 1,
 				remaining_points - get_next_stat_cost(allocated),

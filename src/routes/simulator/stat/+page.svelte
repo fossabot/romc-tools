@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Plus, Minus } from '@lucide/svelte';
+	import { untrack } from 'svelte';
 
 	import {
 		get_max_stat_possible,
@@ -17,10 +18,16 @@
 
 	import { parameters } from './parameters.svelte';
 
-	const { allocations, available_points: max_points, max_stat } = $derived(parameters.current);
-	const remaining_points = $derived(
-		max_points - sum(Object.values(allocations).map(get_total_stat_cost))
-	);
+	const { allocations, available_points, max_stat } = $derived(parameters.current);
+	const used_points = $derived(sum(Object.values(allocations).map(get_total_stat_cost)));
+	const remaining_points = $derived(available_points - used_points);
+
+	$effect(() => {
+		for (const stat of stat_names) {
+			const allocated = untrack(() => allocations[stat]);
+			allocations[stat] = Math.min(allocated, max_stat);
+		}
+	});
 </script>
 
 <div class="mt-4 mb-6 flex space-x-4">
@@ -29,14 +36,26 @@
 		<Input
 			type="number"
 			id="available_points"
-			bind:value={parameters.current.available_points}
+			value={available_points}
+			onchange={(e) =>
+				(parameters.current.available_points = Math.max(
+					used_points,
+					Number((e.target as HTMLInputElement).value)
+				))}
 			min="0"
 		/>
 	</div>
 
 	<div class="flex flex-1 flex-col space-y-2">
 		<Label for="max_stat">Max stat</Label>
-		<Input type="number" id="max_stat" bind:value={parameters.current.max_stat} min="0" />
+		<Input
+			type="number"
+			id="max_stat"
+			value={max_stat}
+			onchange={(e) =>
+				(parameters.current.max_stat = Math.max(0, Number((e.target as HTMLInputElement).value)))}
+			min="0"
+		/>
 	</div>
 </div>
 

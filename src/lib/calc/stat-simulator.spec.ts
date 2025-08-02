@@ -34,5 +34,7 @@ describe('get max stat possible calculations', () => {
 		expect(get_max_stat_possible(0, 293, 99)).toBe(62);
 		expect(get_max_stat_possible(20, 3, 99)).toBe(20);
 		expect(get_max_stat_possible(0, 999, 99)).toBe(99);
+
+		expect(get_max_stat_possible(99, 999, 24)).toBe(24);
 	});
 });
