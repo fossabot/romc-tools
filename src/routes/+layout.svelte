@@ -55,7 +55,7 @@
 		<div class="flex h-12 items-center justify-center sm:h-16">
 			<h1
 				class="text-center"
-				style="view-transition-name: nav{page.url.pathname.replaceAll('/', '-')};"
+				style:view-transition-name="nav{page.url.pathname.replaceAll('/', '-')}"
 			>
 				{title}
 			</h1>
@@ -63,7 +63,7 @@
 
 		<Separator class="my-2" />
 
-		<div class="flex-1" style="view-transition-name: content-{transition_name};">
+		<div class="flex-1" style:view-transition-name="content-{transition_name}">
 			{@render children()}
 		</div>
 	</main>

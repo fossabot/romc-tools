@@ -19,16 +19,15 @@
 </script>
 
 {#snippet nav_link({ id, title }: NavLink, isHome: boolean = false)}
-	{@const href = `${base}${id}`}
-	{@const active = page.url.pathname === href}
-	{@const transition_name = active ? 'unset' : `nav${href.replaceAll('/', '-')}`}
+	{@const pathname = `${base}${id}`}
+	{@const active = page.url.pathname === pathname}
 
 	<li
 		aria-current={active ? 'page' : 'false'}
-		style="view-transition-name: {transition_name};"
+		style:view-transition-name={active ? '' : `nav${pathname.replaceAll('/', '-')}`}
 		class:col-span-2={isHome}
 	>
-		<Button {href} variant="ghost" disabled={active}>{title}</Button>
+		<Button href={pathname} variant="ghost" disabled={active}>{title}</Button>
 	</li>
 {/snippet}
 
