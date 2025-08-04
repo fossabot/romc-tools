@@ -24,7 +24,7 @@
 		<a
 			href="{base}/data?table={page.data.data_id}"
 			class="underline"
-			style:view-transition-name="nav-data">Raw data</a
+			style:view-transition-name="nav-data">View data</a
 		>
 	{/if}
 

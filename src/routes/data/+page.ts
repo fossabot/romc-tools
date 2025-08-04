@@ -1,6 +1,6 @@
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = () => ({
-	title: 'Raw data',
+	title: 'View data',
 	description: 'Data used for ROMC Tools',
 });
