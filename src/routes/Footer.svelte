@@ -4,6 +4,7 @@
 
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import { SOURCE_CODE_URL, VERSION } from '$lib/constants';
+	import { get_route_icon, get_route_id } from '$lib/routes';
 </script>
 
 {#snippet source_code_link()}
@@ -21,11 +22,14 @@
 
 <footer class="flex items-center justify-between border-t px-8 py-6 text-sm font-medium sm:py-4">
 	{#if page.data.data_id !== undefined}
-		<a
-			href="{base}/data?table={page.data.data_id}"
-			class="underline"
-			style:view-transition-name="nav-data">View data</a
-		>
+		{@const title = 'View data'}
+		{@const transition_name = get_route_id({ title })}
+		{@const Icon = get_route_icon({ title })}
+
+		<a href="{base}/data?table={page.data.data_id}" class="flex items-center gap-2">
+			<Icon class="size-4" style="view-transition-name: {transition_name}-icon" />
+			<span class="underline" style:view-transition-name={transition_name}>{title}</span>
+		</a>
 	{/if}
 
 	<p class="flex-1 text-end">romc-tools @ {@render source_code_link()}</p>

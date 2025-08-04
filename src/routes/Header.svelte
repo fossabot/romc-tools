@@ -1,46 +1,80 @@
-<script module lang="ts">
-	export interface NavLink {
-		id: string;
-		title: string;
-	}
-</script>
-
 <script lang="ts">
+	import { ChevronDownIcon } from '@lucide/svelte';
+
 	import { base } from '$app/paths';
 	import { page } from '$app/state';
 
-	import { Button } from '$lib/components/ui/button';
+	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import { routes, type NavLink } from '$lib/routes';
 
-	interface Props {
-		routes: NavLink[];
+	interface BreadcrumbContent {
+		path: string;
+		label: string;
+		others?: NavLink[];
 	}
 
-	const { routes }: Props = $props();
+	const breadcrumbs = $derived.by((): BreadcrumbContent[] => {
+		const paths = page.url.pathname
+			.replace(base, '')
+			.split('/')
+			.filter((path) => path !== '');
+
+		return paths
+			.map((label, idx) => ({ label, path: '/' + paths.slice(0, idx + 1).join('/') }))
+			.map(({ label, path }) => ({
+				label:
+					routes.find((it) => it.path === path)?.title ??
+					label.charAt(0).toUpperCase() + label.slice(1),
+				others: routes.filter((it) => it.path !== page.url.pathname && it.path.startsWith(path)),
+				path,
+			}));
+	});
 </script>
 
-{#snippet nav_link({ id, title }: NavLink, isHome: boolean = false)}
-	{@const pathname = `${base}${id}`}
-	{@const active = page.url.pathname === pathname}
+{#snippet BreadcrumbItem({ path, label, others }: BreadcrumbContent)}
+	{@const href = `${base}${path}`}
 
-	<li
-		aria-current={active ? 'page' : 'false'}
-		style:view-transition-name={active ? '' : `nav${pathname.replaceAll('/', '-')}`}
-		class:col-span-2={isHome}
-	>
-		<Button href={pathname} variant="ghost" disabled={active}>{title}</Button>
-	</li>
+	<Breadcrumb.Item>
+		{#if page.url.pathname === href}
+			<Breadcrumb.Page>{label}</Breadcrumb.Page>
+		{:else if others !== undefined}
+			<DropdownMenu.Root>
+				<DropdownMenu.Trigger class="flex items-center gap-1">
+					{label}
+					<ChevronDownIcon class="size-4" />
+				</DropdownMenu.Trigger>
+				<DropdownMenu.Content align="start">
+					{#each others as { path, title, Icon }}
+						<DropdownMenu.Item>
+							{#snippet child({ props })}
+								<a href="{base}{path}" {...props}>
+									<Icon />
+									{title}
+								</a>
+							{/snippet}
+						</DropdownMenu.Item>
+					{:else}
+						<DropdownMenu.Item>No item.</DropdownMenu.Item>
+					{/each}
+				</DropdownMenu.Content>
+			</DropdownMenu.Root>
+		{:else}
+			<Breadcrumb.Link {href}>{label}</Breadcrumb.Link>
+		{/if}
+	</Breadcrumb.Item>
 {/snippet}
 
 <header class="border-b px-8 py-4">
-	<nav class="w-full">
-		<ul
-			class="grid grid-flow-col grid-cols-2 grid-rows-3 items-center justify-center justify-items-center gap-2 sm:flex sm:space-x-2"
-		>
-			{@render nav_link({ id: '/', title: 'Home' }, true)}
+	<Breadcrumb.Root>
+		<Breadcrumb.List>
+			{@render BreadcrumbItem({ path: '/', label: 'Home' })}
 
-			{#each routes as route}
-				{@render nav_link(route)}
+			{#each breadcrumbs as breadcrumb}
+				<Breadcrumb.Separator />
+
+				{@render BreadcrumbItem(breadcrumb)}
 			{/each}
-		</ul>
-	</nav>
+		</Breadcrumb.List>
+	</Breadcrumb.Root>
 </header>
