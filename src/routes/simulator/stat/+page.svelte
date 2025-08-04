@@ -63,7 +63,7 @@
 
 <div class="flex flex-col space-y-2 sm:flex-col-reverse sm:space-y-reverse">
 	<div class="flex items-center text-sm font-medium">
-		<p class="flex-1 flex flex-col">
+		<p class="flex flex-1 flex-col">
 			<span>Used points: <span class="underline">{used_points}</span></span>
 			<span>Remaining points: <span class="underline">{remaining_points}</span></span>
 		</p>
@@ -103,7 +103,7 @@
 								bind:value={parameters.current.allocations[stat]}
 								disabled={remaining_points < 0}
 							/>
-							<span class="font-medium text-sm">{max_stat_possible}</span>
+							<span class="text-sm font-medium">{max_stat_possible}</span>
 						</div>
 					</Popover.Content>
 				</Popover.Root>
