@@ -8,18 +8,16 @@
 	import * as Select from '$lib/components/ui/select';
 	import { Switch } from '$lib/components/ui/switch';
 	import * as Table from '$lib/components/ui/table';
-	import { table_lookup, type TableName } from '$lib/data';
+	import { tables, type TableName } from '$lib/tables';
 	import { cn, transpose } from '$lib/utils';
 
 	let table = $state<TableName>();
 	let transpose_table = $state(false);
-	const table_data = $derived(
-		table !== undefined ? table_lookup[table]().then(({ get_table }) => get_table()) : undefined
-	);
+	const table_data = $derived(table !== undefined ? tables[table]() : undefined);
 
 	onMount(() => {
 		const _table = page.url.searchParams.get('table') ?? '';
-		if (_table in table_lookup) table = _table as TableName;
+		if (_table in tables) table = _table as TableName;
 	});
 </script>
 
@@ -37,7 +35,7 @@
 	>
 		<Select.Trigger class="w-36">{table ?? 'Select a table'}</Select.Trigger>
 		<Select.Content>
-			{#each Object.keys(table_lookup) as name}
+			{#each Object.keys(tables) as name}
 				<Select.Item value={name}>{name}</Select.Item>
 			{/each}
 		</Select.Content>

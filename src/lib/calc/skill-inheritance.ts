@@ -1,4 +1,3 @@
-import type { TableData } from '$lib/data';
 import { sum } from '$lib/utils';
 
 export enum InheritanceQuality {
@@ -20,11 +19,3 @@ export const calculate_skill_inheritance_shard = (
 	quality: InheritanceQuality,
 	[from, to]: InheritanceRange
 ) => sum(costs[quality].slice(from, to));
-
-export const get_table = (): TableData => ({
-	caption: 'Skill inheritance cost data.',
-	rows: [
-		['Skill rank', ...Array.from({ length: 10 }, (_, idx) => `Lv. ${idx + 1}`), 'Total'],
-		...Object.entries(costs).map(([key, costs]) => [key, ...costs, sum(costs)].map(String)),
-	],
-});

@@ -1,5 +1,5 @@
 // See https://svelte.dev/docs/kit/types#app.d.ts
-import type { TableName } from '$lib/data';
+import type { TableName } from '$lib/tables';
 
 // for information about these interfaces
 declare global {
