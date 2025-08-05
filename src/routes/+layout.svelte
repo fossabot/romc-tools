@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 
 	import { Separator } from '$lib/components/ui/separator';
+	import { WEBSITE_NAME } from '$lib/constants';
 	import { get_route_icon, get_route_id, routes } from '$lib/routes';
 
 	import '../app.css';
@@ -39,7 +40,7 @@
 </script>
 
 <svelte:head>
-	<title>{title} &bull; ROMC Tools</title>
+	<title>{title} &bull; {WEBSITE_NAME}</title>
 	<meta name="description" content={description} />
 </svelte:head>
 

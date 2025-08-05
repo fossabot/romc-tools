@@ -1,5 +1,6 @@
 import { version } from '$app/environment';
 
+export const WEBSITE_NAME = 'ROMC Tools';
 export const GITHUB_REPOSITORY = 'https://github.com/ahmadyasser72/romc-tools';
 
 export const VERSION = version.slice(0, 7);

@@ -1,14 +1,18 @@
 <script lang="ts">
-	import { ChevronDownIcon, MoonIcon, SunIcon } from '@lucide/svelte';
+	import { ChevronDownIcon, MenuIcon, MoonIcon, SunIcon, XIcon } from '@lucide/svelte';
 	import { resetMode, setMode } from 'mode-watcher';
 
 	import { base } from '$app/paths';
 	import { page } from '$app/state';
 
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb';
-	import { buttonVariants } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import { WEBSITE_NAME } from '$lib/constants';
 	import { routes, type NavLink } from '$lib/routes';
+	import { cn } from '$lib/utils';
+
+	const current_path = $derived(page.url.pathname.replace(base, ''));
 
 	interface BreadcrumbContent {
 		path: string;
@@ -17,10 +21,7 @@
 	}
 
 	const breadcrumbs = $derived.by((): BreadcrumbContent[] => {
-		const paths = page.url.pathname
-			.replace(base, '')
-			.split('/')
-			.filter((path) => path !== '');
+		const paths = current_path.split('/').filter((path) => path !== '');
 
 		return paths
 			.map((label, idx) => ({ label, path: '/' + paths.slice(0, idx + 1).join('/') }))
@@ -28,10 +29,13 @@
 				label:
 					routes.find((it) => it.path === path)?.title ??
 					label.charAt(0).toUpperCase() + label.slice(1),
-				others: routes.filter((it) => it.path !== page.url.pathname && it.path.startsWith(path)),
+				others: routes.filter((it) => it.path !== current_path && it.path.startsWith(path)),
 				path,
 			}));
 	});
+
+	let openMenu = $state(false);
+	const menus = $derived(routes.filter((it) => it.path !== current_path));
 </script>
 
 {#snippet BreadcrumbItem({ path, label, others }: BreadcrumbContent)}
@@ -68,9 +72,9 @@
 {/snippet}
 
 {#snippet Breadcrumbs()}
-	<Breadcrumb.Root>
+	<Breadcrumb.Root class="max-sm:hidden">
 		<Breadcrumb.List>
-			{@render BreadcrumbItem({ path: '/', label: 'Home' })}
+			{@render BreadcrumbItem({ path: '/', label: WEBSITE_NAME })}
 
 			{#each breadcrumbs as breadcrumb}
 				<Breadcrumb.Separator />
@@ -79,6 +83,38 @@
 			{/each}
 		</Breadcrumb.List>
 	</Breadcrumb.Root>
+{/snippet}
+
+{#snippet MobileMenu()}
+	<DropdownMenu.Root bind:open={openMenu}>
+		<DropdownMenu.Trigger
+			class={cn(buttonVariants({ variant: 'outline', size: 'icon' }), 'sm:hidden')}
+		>
+			<MenuIcon
+				class={cn('absolute transition-all', openMenu ? 'scale-0 -rotate-90' : 'scale-100')}
+			/>
+			<XIcon class={cn('absolute transition-all', openMenu ? 'scale-100' : 'scale-0 rotate-90')} />
+			<span class="sr-only">Toggle menu</span>
+		</DropdownMenu.Trigger>
+		<DropdownMenu.Content collisionPadding={12}>
+			<DropdownMenu.Group>
+				<DropdownMenu.Label>Menu</DropdownMenu.Label>
+				<DropdownMenu.Separator />
+				{#each menus as { path, title, Icon }}
+					<DropdownMenu.Item>
+						{#snippet child({ props })}
+							<a href="{base}{path}" {...props}>
+								<Icon />
+								{title}
+							</a>
+						{/snippet}
+					</DropdownMenu.Item>
+				{/each}
+			</DropdownMenu.Group>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
+
+	<Button href="{base}/" variant="ghost" class="sm:hidden">{WEBSITE_NAME}</Button>
 {/snippet}
 
 {#snippet ThemeToggle()}
@@ -100,8 +136,10 @@
 	</DropdownMenu.Root>
 {/snippet}
 
-<header class="flex items-center justify-between border-b px-8 py-4">
+<header class="flex items-center justify-between border-b px-4 py-4 sm:px-8">
 	{@render Breadcrumbs()}
+
+	{@render MobileMenu()}
 
 	{@render ThemeToggle()}
 </header>
