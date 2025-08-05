@@ -10,6 +10,7 @@
 
 	import '../app.css';
 	import Footer from './Footer.svelte';
+	import GoatCounter from './GoatCounter.svelte';
 	import Header from './Header.svelte';
 
 	let { children } = $props();
@@ -44,6 +45,7 @@
 	<meta name="description" content={description} />
 </svelte:head>
 
+<GoatCounter />
 <ModeWatcher />
 
 <div class="flex min-h-[100vh] flex-col">
