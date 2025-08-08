@@ -11,9 +11,9 @@
 	import { get_route_icon, get_route_id, routes } from '$lib/routes';
 
 	import '../app.css';
-	import Footer from './Footer.svelte';
-	import GoatCounter from './GoatCounter.svelte';
-	import Header from './Header.svelte';
+	import Footer from './footer.svelte';
+	import GoatCounter from './goat-counter.svelte';
+	import Header from './header.svelte';
 
 	let { children } = $props();
 
