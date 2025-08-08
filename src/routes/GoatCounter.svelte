@@ -5,9 +5,11 @@
 
 	declare global {
 		interface Window {
-			goatcounter: {
-				count: (vars: GoatCounterVars) => void;
-			};
+			goatcounter:
+				| undefined
+				| {
+						count: (vars: GoatCounterVars) => void;
+				  };
 		}
 	}
 </script>
@@ -21,7 +23,7 @@
 	import { GOATCOUNTER_ENDPOINT } from '$lib/constants';
 
 	const track = (route_id?: string | null) => {
-		if (route_id) {
+		if (window.goatcounter && route_id) {
 			window.goatcounter.count({ path: route_id });
 		}
 	};
