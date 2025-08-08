@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { ModeWatcher } from 'mode-watcher';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 
 	import { Separator } from '$lib/components/ui/separator';
+	import { Toaster } from '$lib/components/ui/sonner';
 	import { WEBSITE_NAME } from '$lib/constants';
 	import { get_route_icon, get_route_id, routes } from '$lib/routes';
 
@@ -14,6 +16,8 @@
 	import Header from './Header.svelte';
 
 	let { children } = $props();
+
+	const isDesktop = new MediaQuery('(min-width: 768px)');
 
 	const { title = '[object Object]', description = '[object Object]' } = $derived(page.data);
 
@@ -47,6 +51,7 @@
 
 <GoatCounter />
 <ModeWatcher />
+<Toaster closeButton richColors position={isDesktop.current ? 'top-center' : 'bottom-center'} />
 
 <div class="flex min-h-[100vh] flex-col">
 	<Header />

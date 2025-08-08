@@ -1,6 +1,7 @@
 import {
 	CrownIcon,
 	DatabaseIcon,
+	DicesIcon,
 	FlameIcon,
 	HammerIcon,
 	UserPenIcon,
@@ -18,6 +19,7 @@ export const routes = [
 	{ path: '/calculator/safe-refine', title: 'Safe refine', Icon: HammerIcon },
 	{ path: '/calculator/skill-inheritance', title: 'Skill inheritance', Icon: FlameIcon },
 	{ path: '/simulator/stat', title: 'Stat simulator', Icon: UserPenIcon },
+	{ path: '/simulator/nolan', title: 'Nolan simulator', Icon: DicesIcon },
 	{ path: '/data', title: 'View data', Icon: DatabaseIcon },
 ] as const satisfies NavLink[];
 
