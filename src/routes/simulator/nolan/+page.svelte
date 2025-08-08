@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { toast } from 'svelte-sonner';
 
 	import { gacha_names, gacha_types, pull_card } from '$lib/calc/card-gacha';
@@ -12,11 +13,15 @@
 	const gacha_name = $derived(gacha_names[gacha_type]);
 
 	const pull = () => {
-		const { name, rate } = pull_card(gacha_type);
-		toast.info(`${gacha_name} pull result`, {
-			description: `${name} (${rate}%)`,
-			action: { label: 'Again', onClick: pull },
-			duration: 5000,
+		toast.dismiss();
+
+		tick().then(() => {
+			const { name, rate } = pull_card(gacha_type);
+			toast.info(`${gacha_name} pull result`, {
+				description: `${name} (${rate}%)`,
+				action: { label: 'Again', onClick: pull },
+				duration: 5000,
+			});
 		});
 	};
 </script>
