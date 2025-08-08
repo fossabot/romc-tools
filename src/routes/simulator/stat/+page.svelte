@@ -1,19 +1,12 @@
 <script lang="ts">
-	import { ChevronsRight, Plus, Minus } from '@lucide/svelte';
 	import { untrack } from 'svelte';
 
-	import {
-		get_max_stat_possible,
-		get_next_stat_cost,
-		get_total_stat_cost,
-		stat_names,
-	} from '$lib/calc/stat-simulator';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { get_total_stat_cost, stat_names } from '$lib/calc/stat-simulator';
+	import StatAllocator from '$lib/components/stat-allocator.svelte';
+	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import * as Popover from '$lib/components/ui/popover';
 	import { Separator } from '$lib/components/ui/separator';
-	import { Slider } from '$lib/components/ui/slider';
 	import { sum } from '$lib/utils';
 
 	import { parameters } from './parameters.svelte';
@@ -71,57 +64,14 @@
 	</div>
 
 	<ul class="grid gap-y-2">
-		{#each stat_names as stat}
-			{@const current_stat = allocations[stat]}
-			{@const next_stat_cost = get_next_stat_cost(current_stat)}
-			{@const max_stat_possible = get_max_stat_possible(current_stat, remaining_points, max_stat)}
-
-			{@const increment = () => (parameters.current.allocations[stat] += 1)}
-			{@const decrement = () => (parameters.current.allocations[stat] -= 1)}
-			{@const max_out = () => (parameters.current.allocations[stat] = max_stat_possible)}
-
-			<li class="flex items-center space-x-2">
-				<Popover.Root>
-					<Popover.Trigger
-						class={buttonVariants({
-							variant: 'outline',
-							class: 'inline-flex flex-1 font-medium select-none',
-						})}
-					>
-						<span class="flex-1">{stat} +{current_stat}</span>
-						<Separator orientation="vertical" class="mx-2" />
-						<span>{next_stat_cost}</span>
-					</Popover.Trigger>
-					<Popover.Content>
-						<Label for="allocated_{stat}">Set {stat} value</Label>
-						<div class="flex items-center space-x-2">
-							<Slider
-								type="single"
-								id="allocated_{stat}"
-								showTicks={false}
-								max={max_stat_possible}
-								bind:value={parameters.current.allocations[stat]}
-								disabled={remaining_points < 0}
-							/>
-							<span class="text-sm font-medium">{max_stat_possible}</span>
-						</div>
-					</Popover.Content>
-				</Popover.Root>
-
-				<Button size="icon" disabled={current_stat >= max_stat_possible} onclick={increment}>
-					<Plus />
-					<span class="sr-only">Increment {stat}</span>
-				</Button>
-
-				<Button size="icon" disabled={current_stat <= 0} onclick={decrement}>
-					<Minus />
-					<span class="sr-only">Decrement {stat}</span>
-				</Button>
-
-				<Button size="icon" disabled={current_stat >= max_stat_possible} onclick={max_out}>
-					<ChevronsRight />
-					<span class="sr-only">Max out {stat}</span>
-				</Button>
+		{#each stat_names as stat_name}
+			<li class="contents">
+				<StatAllocator
+					bind:allocated_stat={parameters.current.allocations[stat_name]}
+					{stat_name}
+					{max_stat}
+					{remaining_points}
+				/>
 			</li>
 		{/each}
 	</ul>
