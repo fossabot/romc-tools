@@ -61,5 +61,7 @@
 	<div class="mt-4 grid w-48 gap-2 sm:w-64 sm:grid-cols-2">
 		{@render PullButton(1)}
 		{@render PullButton(10)}
+		{@render PullButton(50)}
+		{@render PullButton(100)}
 	</div>
 </div>
