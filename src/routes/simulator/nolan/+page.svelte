@@ -12,15 +12,28 @@
 	const { gacha_type } = $derived(parameters.current);
 	const gacha_name = $derived(gacha_names[gacha_type]);
 
-	const pull = () => {
+	const pull = (count: 1 | 10) => {
 		toast.dismiss();
 
-		tick().then(() => {
+		const pull1 = () => {
 			const { name, rate } = pull_card(gacha_type);
+			return `${name} (${rate}%)`;
+		};
+
+		const pull10 = () =>
+			Array.from({ length: 10 }, () => pull_card(gacha_type))
+				.sort(({ rate: a }, { rate: b }) => a - b)
+				.map(
+					({ name, rate }, idx) => `${(idx + 1).toString().padStart(2, '0')}. ${name} (${rate}%)`
+				)
+				.join('\n');
+
+		tick().then(() => {
 			toast.info(`${gacha_name} pull result`, {
-				description: `${name} (${rate}%)`,
-				action: { label: 'Again', onClick: pull },
-				duration: 5000,
+				description: count === 1 ? pull1() : pull10(),
+				action: { label: 'Again', onClick: () => pull(count) },
+				duration: 10_000,
+				descriptionClass: 'whitespace-pre',
 			});
 		});
 	};
@@ -36,5 +49,8 @@
 		{/each}
 	</RadioGroup.Root>
 
-	<Button class="mt-4 w-64" onclick={pull}>Pull</Button>
+	<div class="mt-4 flex w-48 gap-2 max-sm:flex-col sm:w-64">
+		<Button class="flex-1" onclick={() => pull(1)}>Pull 1x</Button>
+		<Button class="flex-1" onclick={() => pull(10)}>Pull 10x</Button>
+	</div>
 </div>
