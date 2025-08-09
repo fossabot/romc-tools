@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ModeWatcher } from 'mode-watcher';
-	import { MediaQuery } from 'svelte/reactivity';
 
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
@@ -9,6 +8,7 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { WEBSITE_NAME } from '$lib/constants';
 	import { get_route_icon, get_route_id, routes } from '$lib/routes';
+	import { isDesktop } from '$lib/utils.svelte';
 
 	import '../app.css';
 	import Footer from './footer.svelte';
@@ -16,8 +16,6 @@
 	import Header from './header.svelte';
 
 	let { children } = $props();
-
-	const isDesktop = new MediaQuery('(min-width: 768px)');
 
 	const { title = '[object Object]', description = '[object Object]' } = $derived(page.data);
 

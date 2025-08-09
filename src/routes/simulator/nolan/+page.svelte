@@ -1,43 +1,52 @@
 <script lang="ts">
-	import { tick } from 'svelte';
-	import { toast } from 'svelte-sonner';
-
-	import { gacha_names, gacha_types, pull_card } from '$lib/calc/card-gacha';
-	import { Button } from '$lib/components/ui/button';
+	import { gacha_names, gacha_types, pull_card, type GachaItem } from '$lib/calc/card-gacha';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
+	import { isDesktop } from '$lib/utils.svelte';
 
 	import { parameters } from './parameters.svelte';
 
 	const { gacha_type } = $derived(parameters.current);
 	const gacha_name = $derived(gacha_names[gacha_type]);
 
-	const pull = (count: 1 | 10) => {
-		toast.dismiss();
-
-		const pull1 = () => {
-			const { name, rate } = pull_card(gacha_type);
-			return `${name} (${rate}%)`;
-		};
-
-		const pull10 = () =>
-			Array.from({ length: 10 }, () => pull_card(gacha_type))
-				.sort(({ rate: a }, { rate: b }) => a - b)
-				.map(
-					({ name, rate }, idx) => `${(idx + 1).toString().padStart(2, '0')}. ${name} (${rate}%)`
-				)
-				.join('\n');
-
-		tick().then(() => {
-			toast.info(`${gacha_name} pull result`, {
-				description: count === 1 ? pull1() : pull10(),
-				action: { label: 'Again', onClick: () => pull(count) },
-				duration: 10_000,
-				descriptionClass: 'whitespace-pre',
-			});
-		});
-	};
+	let pull_results = $state<GachaItem[]>([]);
 </script>
+
+{#snippet PullButton(count: number)}
+	{@const pull = () =>
+		(pull_results = Array.from({ length: count }, () => pull_card(gacha_type)).sort(
+			(a, b) => a.rate - b.rate
+		))}
+
+	<Dialog.Root>
+		<Dialog.Trigger class={buttonVariants({ variant: 'outline' })} onclick={pull}
+			>Pull {count}x</Dialog.Trigger
+		>
+
+		<Dialog.Content>
+			<Dialog.Header>
+				<Dialog.Title>{gacha_name} pull results ({pull_results.length}x)</Dialog.Title>
+				<Dialog.Description>Pulls are sorted by rate from lowest to highest.</Dialog.Description>
+			</Dialog.Header>
+
+			<ul
+				class="grid max-h-[50vh] grid-flow-col overflow-y-auto"
+				style:grid-template-rows="repeat({count / (isDesktop.current ? 2 : 1)}, 1fr)"
+				style:grid-auto-columns="1fr"
+			>
+				{#each pull_results as { name, rate }}
+					<li class="text-center text-sm font-medium">{name} ({rate}%)</li>
+				{/each}
+			</ul>
+
+			<Dialog.Footer>
+				<Button onclick={pull}>Pull again</Button>
+			</Dialog.Footer>
+		</Dialog.Content>
+	</Dialog.Root>
+{/snippet}
 
 <div class="mt-8 mb-6 flex flex-col items-center">
 	<RadioGroup.Root bind:value={parameters.current.gacha_type}>
@@ -49,8 +58,8 @@
 		{/each}
 	</RadioGroup.Root>
 
-	<div class="mt-4 flex w-48 gap-2 max-sm:flex-col sm:w-64">
-		<Button class="flex-1" onclick={() => pull(1)}>Pull 1x</Button>
-		<Button class="flex-1" onclick={() => pull(10)}>Pull 10x</Button>
+	<div class="mt-4 grid w-48 gap-2 sm:w-64 sm:grid-cols-2">
+		{@render PullButton(1)}
+		{@render PullButton(10)}
 	</div>
 </div>
