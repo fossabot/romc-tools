@@ -32,12 +32,12 @@
 			</Dialog.Header>
 
 			<ul
-				class="grid max-h-[50vh] grid-flow-col overflow-y-auto"
+				class="grid max-h-[50vh] grid-flow-col gap-x-2 overflow-y-auto"
 				style:grid-template-rows="repeat({count / (isDesktop.current ? 2 : 1)}, 1fr)"
 				style:grid-auto-columns="1fr"
 			>
 				{#each pull_results as { name, rate }}
-					<li class="text-center text-sm font-medium">{name} ({rate}%)</li>
+					<li class="text-end text-sm font-medium">{name} ({rate}%)</li>
 				{/each}
 			</ul>
 
