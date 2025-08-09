@@ -4,21 +4,22 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Label } from '$lib/components/ui/label';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
+	import { Switch } from '$lib/components/ui/switch';
 	import { isDesktop } from '$lib/utils.svelte';
 
 	import { parameters } from './parameters.svelte';
 
-	const { gacha_type } = $derived(parameters.current);
+	const { gacha_type, sort_pulls } = $derived(parameters.current);
 	const gacha_name = $derived(gacha_names[gacha_type]);
 
 	let pull_results = $state<GachaItem[]>([]);
 </script>
 
 {#snippet PullButton(count: number)}
-	{@const pull = () =>
-		(pull_results = Array.from({ length: count }, () => pull_card(gacha_type)).sort(
-			(a, b) => a.rate - b.rate
-		))}
+	{@const pull = () => (pull_results = Array.from({ length: count }, () => pull_card(gacha_type)))}
+	{@const pulls = sort_pulls
+		? [...pull_results].sort((a, b) => a.rate - b.rate || a.name.localeCompare(b.name))
+		: pull_results}
 
 	<Dialog.Root>
 		<Dialog.Trigger class={buttonVariants({ variant: 'outline' })} onclick={pull}
@@ -36,10 +37,17 @@
 				style:grid-template-rows="repeat({count / (isDesktop.current ? 2 : 1)}, 1fr)"
 				style:grid-auto-columns="1fr"
 			>
-				{#each pull_results as { name, rate }}
+				{#each pulls as { name, rate }}
 					<li class="text-end text-sm font-medium">{name} ({rate}%)</li>
 				{/each}
 			</ul>
+
+			{#if count > 1}
+				<div class="flex items-center space-x-2 place-self-center">
+					<Switch id="sort-pull-results" bind:checked={parameters.current.sort_pulls} />
+					<Label for="sort-pull-results">Sort pulls</Label>
+				</div>
+			{/if}
 
 			<Dialog.Footer>
 				<Button onclick={pull}>Pull again</Button>
