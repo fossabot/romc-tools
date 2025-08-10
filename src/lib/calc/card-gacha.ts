@@ -8,6 +8,16 @@ export const gacha_names = {
 	nolan: 'Combined Fate',
 } satisfies Record<GachaType, string>;
 
+interface GachaCost {
+	name: string;
+	amount: number;
+}
+
+export const gacha_costs = {
+	gram: { amount: 12, name: 'Gram crystals' },
+	nolan: { amount: 1500, name: 'Nolan cards' },
+} satisfies Record<GachaType, GachaCost>;
+
 const tables = {
 	gram: [
 		['Angeling', 3.361],

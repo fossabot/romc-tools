@@ -7,6 +7,7 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import { isDesktop } from '$lib/utils.svelte';
 
+	import NolanCardPullUntil from './nolan-card-pull-until.svelte';
 	import { parameters } from './parameters.svelte';
 
 	const { gacha_type, sort_pulls } = $derived(parameters.current);
@@ -22,9 +23,7 @@
 		: pull_results}
 
 	<Dialog.Root>
-		<Dialog.Trigger class={buttonVariants({ variant: 'outline' })} onclick={pull}
-			>Pull {count}x</Dialog.Trigger
-		>
+		<Dialog.Trigger class={buttonVariants()} onclick={pull}>Pull {count}x</Dialog.Trigger>
 
 		<Dialog.Content>
 			<Dialog.Header>
@@ -66,10 +65,12 @@
 		{/each}
 	</RadioGroup.Root>
 
-	<div class="mt-4 grid w-48 gap-2 sm:w-64 sm:grid-cols-2">
+	<div class="mt-4 grid w-full grid-cols-2 gap-2 sm:w-64">
 		{@render PullButton(1)}
 		{@render PullButton(10)}
 		{@render PullButton(50)}
 		{@render PullButton(100)}
+
+		<NolanCardPullUntil class="col-span-2" />
 	</div>
 </div>

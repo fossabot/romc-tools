@@ -53,7 +53,7 @@
 {/if}
 
 <ModeWatcher />
-<Toaster closeButton richColors position={isDesktop.current ? 'top-center' : 'bottom-center'} />
+<Toaster richColors position={isDesktop.current ? 'top-center' : 'bottom-center'} />
 
 <div class="flex min-h-[100vh] flex-col">
 	<Header />
