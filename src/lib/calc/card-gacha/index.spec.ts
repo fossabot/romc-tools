@@ -2,9 +2,20 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { sum } from '$lib/utils';
 
-import { gacha_table, pull_card } from './card-gacha';
+import { gacha_table, pull_card } from '.';
+import gram_table from './table-gram.csv';
+import nolan_table from './table-nolan.csv';
 
 describe('gacha data', () => {
+	it('should be defined correctly', () => {
+		for (const raw_table of [gram_table, nolan_table]) {
+			for (const row of raw_table) {
+				expect(row.name).toBeTypeOf('string');
+				expect(Number(row.rate)).not.toBeNaN();
+			}
+		}
+	});
+
 	it('should have approximately 100% rate in total', () => {
 		for (const table of Object.values(gacha_table)) {
 			const total_rate = sum(table.map(({ rate }) => rate));
