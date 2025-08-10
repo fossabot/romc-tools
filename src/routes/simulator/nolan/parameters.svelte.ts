@@ -1,4 +1,4 @@
-import type { GachaItem, GachaType } from '$lib/calc/card-gacha';
+import { gacha_costs, gacha_names, type GachaItem, type GachaType } from '$lib/calc/card-gacha';
 import { persistedParameters } from '$lib/utils';
 
 export interface Parameters {
@@ -12,3 +12,15 @@ export const parameters = persistedParameters<Parameters>('nolan-simulator-param
 	sort_pulls: true,
 	pull_until_target: undefined,
 });
+
+const gacha_name = $derived(gacha_names[parameters.current.gacha_type]);
+const gacha_cost = $derived(gacha_costs[parameters.current.gacha_type]);
+
+export const computed = {
+	get gacha_name() {
+		return gacha_name;
+	},
+	get gacha_cost() {
+		return gacha_cost;
+	},
+};

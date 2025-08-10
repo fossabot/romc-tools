@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
 
-	import { gacha_costs, gacha_names, pull_card } from '$lib/calc/card-gacha';
+	import { pull_card } from '$lib/calc/card-gacha';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import * as Dialog from '$lib/components/ui/dialog';
 
 	import NolanCardCombobox from './nolan-card-combobox.svelte';
-	import { parameters } from './parameters.svelte';
+	import { parameters, computed } from './parameters.svelte';
 
 	interface Props {
 		class?: string;
@@ -14,8 +14,7 @@
 
 	const { class: className }: Props = $props();
 	const { gacha_type, pull_until_target } = $derived(parameters.current);
-	const gacha_name = $derived(gacha_names[gacha_type]);
-	const gacha_cost = $derived(gacha_costs[gacha_type]);
+	const { gacha_name, gacha_cost } = $derived(computed);
 
 	let is_pulling = $state(false);
 	const pull = () => {
