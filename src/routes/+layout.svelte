@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ModeWatcher } from 'mode-watcher';
 
+	import { dev } from '$app/environment';
 	import { onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 
@@ -47,7 +48,10 @@
 	<meta name="description" content={description} />
 </svelte:head>
 
-<GoatCounter />
+{#if !dev}
+	<GoatCounter />
+{/if}
+
 <ModeWatcher />
 <Toaster closeButton richColors position={isDesktop.current ? 'top-center' : 'bottom-center'} />
 
