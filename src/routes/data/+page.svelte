@@ -30,7 +30,7 @@
 
 			const params = new URLSearchParams(page.url.searchParams);
 			params.set('table', table);
-			replaceState(`?${params.toString()}`, { table });
+			replaceState(`?${params.toString()}`, {});
 		}}
 	>
 		<Select.Trigger class="w-36">{table ?? 'Select a table'}</Select.Trigger>

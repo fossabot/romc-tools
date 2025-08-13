@@ -21,12 +21,15 @@
 {/snippet}
 
 <footer class="flex items-center justify-between border-t px-8 py-6 text-sm font-medium sm:py-4">
-	{#if page.data.data_id !== undefined}
+	{#if page.data.table_id !== undefined}
 		{@const title = 'View data'}
 		{@const transition_name = get_route_id({ title })}
 		{@const Icon = get_route_icon({ title })}
 
-		<a href="{base}/data?table={page.data.data_id}" class="flex items-center gap-2">
+		{@const table_id =
+			page.data.table_id === 'override' ? page.state.table_id_override : page.data.table_id}
+
+		<a href="{base}/data?table={table_id}" class="flex items-center gap-2">
 			<Icon class="size-4" style="view-transition-name: {transition_name}-icon" />
 			<span class="underline" style:view-transition-name={transition_name}>{title}</span>
 		</a>

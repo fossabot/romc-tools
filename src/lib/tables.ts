@@ -1,3 +1,4 @@
+import { gacha_names, type GachaType } from './calc/card-gacha';
 import { formatZeny, sum } from './utils';
 
 export interface TableData {
@@ -57,6 +58,14 @@ export const tables = {
 				...Object.entries(costs).map(([key, costs]) => [key, ...costs, sum(costs)].map(String)),
 			],
 		})),
+	'nolan-gacha': () => card_gacha('nolan'),
+	'gram-gacha': () => card_gacha('gram'),
 } satisfies Record<string, () => Promise<TableData>>;
 
 export type TableName = keyof typeof tables;
+
+const card_gacha = ((type: GachaType) =>
+	import('$lib/calc/card-gacha').then(({ gacha_table }) => ({
+		caption: `${gacha_names[type]} gacha pull rates.`,
+		rows: [['Card name', 'Rate'], ...gacha_table[type].map(({ name, rate }) => [name, `${rate}%`])],
+	}))) satisfies (type: GachaType) => Promise<TableData>;

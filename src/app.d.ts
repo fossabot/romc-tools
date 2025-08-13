@@ -10,9 +10,11 @@ declare global {
 			title?: string;
 			description?: string;
 
-			data_id?: TableName;
+			table_id?: TableName | 'override';
 		}
-		// interface PageState {}
+		interface PageState {
+			table_id_override?: TableName;
+		}
 		// interface Platform {}
 	}
 }
