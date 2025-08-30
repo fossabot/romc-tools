@@ -7,20 +7,24 @@ import gram_table from './table-gram.csv';
 import nolan_table from './table-nolan.csv';
 
 describe('gacha data', () => {
-	it('should be defined correctly', () => {
-		for (const raw_table of [gram_table, nolan_table]) {
+	const tables = [
+		['gram', gram_table],
+		['nolan', nolan_table],
+	] as const;
+
+	for (const [name, raw_table] of tables) {
+		it(`${name} table should be defined correctly`, () => {
 			for (const row of raw_table) {
 				expect(row.name).toBeTypeOf('string');
 				expect(Number(row.rate)).not.toBeNaN();
 			}
-		}
-	});
+		});
+	}
 
 	it('should have approximately 100% rate in total', () => {
-		for (const table of Object.values(gacha_table)) {
+		for (const [name, table] of Object.entries(gacha_table)) {
 			const total_rate = sum(table.map(({ rate }) => rate));
-			expect(total_rate).toBeGreaterThan(99.9);
-			expect(total_rate).toBeLessThanOrEqual(100);
+			expect(total_rate, `${name} table`).toBeCloseTo(100, 1);
 		}
 	});
 });
