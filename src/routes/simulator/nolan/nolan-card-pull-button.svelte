@@ -20,8 +20,19 @@
 	const pull = () => (pull_results = Array.from({ length: count }, () => pull_card(gacha_type)));
 	const pulls = $derived(
 		sort_pulls
-			? [...pull_results].sort((a, b) => a.rate - b.rate || a.name.localeCompare(b.name))
-			: pull_results
+			? Object.entries(
+					[...pull_results]
+						.sort((a, b) => a.rate - b.rate || a.name.localeCompare(b.name))
+						.reduce(
+							(acc, { name, rate }) => {
+								acc[name] ??= { rate, amount: 0 };
+								acc[name].amount += 1;
+								return acc;
+							},
+							{} as Record<string, { rate: number; amount: number }>
+						)
+				).map(([name, { amount, rate }]) => `${name} ${amount}x (${rate}%)`)
+			: pull_results.map(({ name, rate }) => `${name} (${rate}%)`)
 	);
 </script>
 
@@ -39,8 +50,8 @@
 			style:grid-template-rows="repeat({count / (isDesktop.current ? 2 : 1)}, 1fr)"
 			style:grid-auto-columns="1fr"
 		>
-			{#each pulls as { name, rate }}
-				<li class="text-end text-sm font-medium">{name} ({rate}%)</li>
+			{#each pulls as item}
+				<li class="text-end text-sm font-medium">{item}</li>
 			{/each}
 		</ul>
 
