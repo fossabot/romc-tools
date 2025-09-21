@@ -21,8 +21,10 @@
 
 	let { stat_name, allocated_stat = $bindable(), remaining_points, max_stat }: Props = $props();
 
-	const next_stat_cost = get_next_stat_cost(allocated_stat);
-	const max_stat_possible = get_max_stat_possible(allocated_stat, remaining_points, max_stat);
+	const next_stat_cost = $derived(get_next_stat_cost(allocated_stat));
+	const max_stat_possible = $derived(
+		get_max_stat_possible(allocated_stat, remaining_points, max_stat)
+	);
 
 	const increment = () => (allocated_stat += 1);
 	const decrement = () => (allocated_stat -= 1);
