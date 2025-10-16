@@ -1,4 +1,6 @@
 # sv
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fahmadyasser72%2Fromc-tools.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fahmadyasser72%2Fromc-tools?ref=badge_shield)
+
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
@@ -36,3 +38,7 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fahmadyasser72%2Fromc-tools.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fahmadyasser72%2Fromc-tools?ref=badge_large)
